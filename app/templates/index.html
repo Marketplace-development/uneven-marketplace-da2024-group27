@@ -1,31 +1,58 @@
-{% if username %}
-   <h3>Welcome, {{ username }}!</h3>
-   <h4>Your Notifications</h4>
-   <ul>
-   {% for notification in notifications %}
-       <li>{{ notification.type }}</li>
-   {% else %}
-       <li>No notifications.</li>
-   {% endfor %}
-   </ul>
-   <h4>Your Listings</h4>
-   <ul>
-   {% for listing in listings %}
-       <li>{{ listing.name }} - ${{ "%.2f"|format(listing.price) }}</li>
-   {% else %}
-       <li>You have no listings yet. Add one now!</li>
-   {% endfor %}
-   </ul>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome {{ username if username else 'Guest' }}</h1>
+        {% if username %}
+            <a href="{{ url_for('main.logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('main.login') }}">Login</a> | 
+            <a href="{{ url_for('main.register') }}">Register</a>
+        {% endif %}
+    </header>
+    
+    <main>
+        <h2>Your Products</h2>
+        {% if listings %}
+            <ul>
+                {% for listing in listings %}
+                    <li>
+                        <strong>{{ listing.name }}</strong><br>
+                        {{ listing.description }}<br>
+                        Status: {{ listing.status }}
+                        {% if listing.picture %}
+                            <img src="{{ listing.picture }}" alt="{{ listing.name }}" style="width:100px;height:auto;">
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No products available.</p>
+        {% endif %}
+        
+        <h2>Notifications</h2>
+        {% if notifications %}
+            <ul>
+                {% for notification in notifications %}
+                    <li>{{ notification.type }} - {% if notification.viewed %}Viewed{% else %}Unviewed{% endif %}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No notifications.</p>
+        {% endif %}
+        
+        <a href="{{ url_for('main.add_product') }}">Add a New Product</a>
+        <a href="{{ url_for('main.listings') }}">View All Listings</a>
+    </main>
+    
+    <footer>
+        <p>&copy; 2024 GardenLend</p>
+    </footer>
+</body>
+</html>
 
-   <!-- Knop om alle listings te bekijken -->
-   <button onclick="window.location.href='/add-listing'">Add Listing</button>
-
-   <!-- Logout-formulier -->
-   <form method="post" action="{{ url_for('main.logout') }}">
-       <button type="submit">Logout</button>
-   </form>
-{% else %}
-   <h1>You are not logged in</h1>
-   <a href="{{ url_for('main.login') }}">Login</a>
-   <a href="{{ url_for('main.register') }}">Register</a>
-{% endif %}
