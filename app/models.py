@@ -21,7 +21,7 @@ class Notification(db.Model):
 
 class Product(db.Model):
     __tablename__ = 'Product'  # Adjusted to match the image
-    listingID = db.Column(db.Integer, primary_key=True)
+    listingID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=False)
     picture = db.Column(db.String(200), nullable=True)

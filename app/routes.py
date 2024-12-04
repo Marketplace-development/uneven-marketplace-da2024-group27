@@ -60,31 +60,43 @@ def logout():
     return redirect(url_for('main.home'))
 
 # Add Product Route
-@main.route('/add-product', methods=['GET', 'POST'])
+from sqlalchemy.exc import IntegrityError
+
+@main.route('/add-product', methods=['POST'])
 def add_product():
-    if 'user_id' not in session:
-        flash('You need to log in to add a product', 'warning')
-        return redirect(url_for('main.login'))
-    
     if request.method == 'POST':
-        name = request.form['listing_name']
-        description = request.form['description']
-        picture = request.form['picture']
-        status = request.form['status']
-        available_calendar = request.form['available_calendar']
+        # Haal formuliergegevens op
+        name = request.form.get('name')
+        description = request.form.get('description')
+        picture = request.form.get('picture')
+        provider_id = request.form.get('providerID')
+        status = request.form.get('status')
+        available_calendar = request.form.get('available_calendar')
+
+        # Maak een nieuw product aan zonder 'listingID'
         new_product = Product(
             name=name,
             description=description,
             picture=picture,
+            providerID=provider_id,
             status=status,
-            available_calendar=available_calendar,
-            providerID=session['user_id']
+            available_calendar=available_calendar
         )
-        db.session.add(new_product)
-        db.session.commit()
-        flash('Product added successfully', 'success')
-        return redirect(url_for('main.dashboard'))
-    return render_template('add_listing.html')
+
+        try:
+            # Voeg product toe aan de database
+            db.session.add(new_product)
+            db.session.commit()
+            flash('New product added successfully!', 'success')  # Succesmelding
+        except IntegrityError:
+            # Rollback bij fout
+            db.session.rollback()
+            flash('An error occurred: duplicate listingID or other unique constraint violated.', 'error')
+
+        return redirect(url_for('main.add_product'))  # Leid de gebruiker terug naar de toevoegpagina
+
+    # Render de toevoegpagina
+    return render_template('add_product.html')
 
 # View All Listings Route
 @main.route('/listings')
