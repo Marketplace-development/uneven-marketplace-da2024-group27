@@ -16,6 +16,10 @@
        <li>You have no listings yet. Add one now!</li>
    {% endfor %}
    </ul>
+
+   <!-- Knop om alle listings te bekijken -->
+   <button onclick="window.location.href='/add-listing'">Add Listing</button>
+
    <!-- Logout-formulier -->
    <form method="post" action="{{ url_for('main.logout') }}">
        <button type="submit">Logout</button>

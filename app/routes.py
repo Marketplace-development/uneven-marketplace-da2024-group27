@@ -7,9 +7,9 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def index():
     if 'user_id' in session:
-        user = User.query.get(session['user_id'])
-        products = Product.query.filter_by(providerID=user.userID).all()
-        notifications = Notification.query.filter_by(receiverID=user.userID).all()
+        User = User.query.get(session['user_id'])
+        Product = Product.query.filter_by(providerID=user.userID).all()
+        Notification = Notification.query.filter_by(receiverID=user.userID).all()
         return render_template('index.html', username=user.userName, listings=products, notifications=notifications)
     
     all_products = Product.query.all()
@@ -22,7 +22,7 @@ def listings():
     return render_template('listings.html', listings=all_products)
 
 # Add Listing Route
-@main.route('/add-listing', methods=['GET', 'POST'])
+@main.route('/add_listing', methods=['GET', 'POST'])
 def add_listing():
     if 'user_id' not in session:
         flash('You need to log in to add a listing', 'warning')
@@ -93,7 +93,7 @@ def book_product(product_id):
         flash('You need to log in to book a product', 'warning')
         return redirect(url_for('main.login'))
     
-    product = Product.query.get_or_404(product_id)
+    Product = Product.query.get_or_404(product_id)
     if request.method == 'POST':
         persons_booked = int(request.form['persons_booked'])
         time = request.form['time']
