@@ -1,5 +1,3 @@
-# app/routes.py
-
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash
 from .models import db, User, Product, Booking, Review, Notification
 
@@ -11,55 +9,23 @@ def index():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         products = Product.query.filter_by(providerID=user.userID).all()
-        notifications = Notification.query.filter_by(receiverID=user.userID).all()  # Voeg dit toe
+        notifications = Notification.query.filter_by(receiverID=user.userID).all()
         return render_template('index.html', username=user.userName, listings=products, notifications=notifications)
     
     all_products = Product.query.all()
     return render_template('index.html', username=None, listings=all_products, notifications=[])
 
-# Register Route
-@main.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        auth_id = request.form['auth_id']
-        if User.query.filter_by(userName=username).first() is None:
-            new_user = User(userName=username, email=email, authID=auth_id)
-            db.session.add(new_user)
-            db.session.commit()
-            session['user_id'] = new_user.userID
-            flash('Registration successful', 'success')
-            return redirect(url_for('main.index'))
-        flash('Username or email already registered', 'danger')
-    return render_template('register.html')
+# View All Listings Route
+@main.route('/listings')
+def listings():
+    all_products = Product.query.all()
+    return render_template('listings.html', listings=all_products)
 
-@main.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        auth_id = request.form['auth_id']
-        # Valideren op basis van username, email en auth_id
-        user = User.query.filter_by(userName=username, email=email, authID=auth_id).first()
-        if user:
-            session['user_id'] = user.userID  # Gebruiker opslaan in de sessie
-            flash('Login successful', 'success')
-            return redirect(url_for('main.index'))
-        flash('Invalid credentials. Please try again.', 'danger')
-    return render_template('login.html')
-
-# Logout Route
-@main.route('/logout', methods=['POST'])
-def logout():
-    session.pop('user_id', None)
-    return redirect(url_for('main.index'))
-
-# Add Product Route
-@main.route('/add-product', methods=['GET', 'POST'])
-def add_product():
+# Add Listing Route
+@main.route('/add-listing', methods=['GET', 'POST'])
+def add_listing():
     if 'user_id' not in session:
-        flash('You need to log in to add a product', 'warning')
+        flash('You need to log in to add a listing', 'warning')
         return redirect(url_for('main.login'))
     
     if request.method == 'POST':
@@ -78,15 +44,47 @@ def add_product():
         )
         db.session.add(new_product)
         db.session.commit()
-        flash('Product added successfully', 'success')
+        flash('Listing added successfully', 'success')
         return redirect(url_for('main.index'))
     return render_template('add_listing.html')
 
-# View All Listings Route
-@main.route('/listings')
-def listings():
-    all_products = Product.query.all()
-    return render_template('listings.html', listings=all_products)
+# Register Route
+@main.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        auth_id = request.form['auth_id']
+        if User.query.filter_by(userName=username).first() is None:
+            new_user = User(userName=username, email=email, authID=auth_id)
+            db.session.add(new_user)
+            db.session.commit()
+            session['user_id'] = new_user.userID
+            flash('Registration successful', 'success')
+            return redirect(url_for('main.index'))
+        flash('Username or email already registered', 'danger')
+    return render_template('register.html')
+
+# Login Route
+@main.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        email = request.form['email']
+        auth_id = request.form['auth_id']
+        user = User.query.filter_by(userName=username, email=email, authID=auth_id).first()
+        if user:
+            session['user_id'] = user.userID
+            flash('Login successful', 'success')
+            return redirect(url_for('main.index'))
+        flash('Invalid credentials. Please try again.', 'danger')
+    return render_template('login.html')
+
+# Logout Route
+@main.route('/logout', methods=['POST'])
+def logout():
+    session.pop('user_id', None)
+    return redirect(url_for('main.index'))
 
 # Book Product Route
 @main.route('/book-product/<int:product_id>', methods=['GET', 'POST'])
