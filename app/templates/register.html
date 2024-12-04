@@ -1,7 +1,28 @@
-<form method="post">
-    Username: <input type="text" name="username" required><br>
-    Email: <input type="email" name="email" required><br>
-    Auth ID: <input type="text" name="auth_id" required><br>
-    <input type="submit" value="Register">
- </form>
- 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+</head>
+<body>
+    <h1>Register</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="auth_id">Auth ID:</label>
+        <input type="password" id="auth_id" name="auth_id" required><br>
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
+

@@ -1,10 +1,19 @@
-<h1>All Listings</h1>
-{% for listing in listings %}
-<div>
-   <h2>{{ listing.name }}</h2>
-   <p>{{ listing.description }}</p>
-   <img src="{{ listing.picture }}" alt="Product Image" width="200">
-</div>
-{% else %}
-<p>No listings available.</p>
-{% endfor %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Products</title>
+</head>
+<body>
+    <h1>Your Products</h1>
+    <ul>
+        {% for product in products %}
+        <li>
+            <strong>{{ product.name }}</strong><br>
+            {{ product.description }}<br>
+            Status: {{ product.status }}
+        </li>
+        {% endfor %}
+    </ul>
+    <a href="/"><button>Back to Home</button></a>
+</body>
+</html>

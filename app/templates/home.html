@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Home</title>
+    <title>Welcome to GardenLend</title>
 </head>
 <body>
-   <h1>Welcome to the Marketplace</h1>
-   <p>Explore our products, book them, and leave reviews!</p>
-   <a href="{{ url_for('main.listings') }}">View Listings</a>
-   <a href="{{ url_for('main.login') }}">Login</a>
-   <a href="{{ url_for('main.register') }}">Sign Up</a>
+    <h1>Welcome to GardenLend</h1>
+    <p>Discover tools and equipment for your gardening needs!</p>
+    <a href="/login"><button>Login</button></a>
+    <a href="/register"><button>Register</button></a>
 </body>
 </html>
