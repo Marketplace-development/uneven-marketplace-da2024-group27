@@ -3,17 +3,22 @@ from .models import db, User, Product, Booking, Review, Notification
 
 main = Blueprint('main', __name__)
 
-# Index Route: Dashboard
+# Homepage Route
 @main.route('/')
-def index():
+def home():
+    return render_template('home.html')
+
+# Dashboard Route
+@main.route('/dashboard')
+def dashboard():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         products = Product.query.filter_by(providerID=user.userID).all()
         notifications = Notification.query.filter_by(receiverID=user.userID).all()
         return render_template('index.html', username=user.userName, listings=products, notifications=notifications)
     
-    all_products = Product.query.all()
-    return render_template('index.html', username=None, listings=all_products, notifications=[])
+    flash('You need to log in to view the dashboard.', 'warning')
+    return redirect(url_for('main.login'))
 
 # Register Route
 @main.route('/register', methods=['GET', 'POST'])
@@ -28,7 +33,7 @@ def register():
             db.session.commit()
             session['user_id'] = new_user.userID
             flash('Registration successful', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.dashboard'))
         flash('Username or email already registered', 'danger')
     return render_template('register.html')
 
@@ -43,29 +48,36 @@ def login():
         if user:
             session['user_id'] = user.userID
             flash('Login successful', 'success')
-            return redirect(url_for('main.index'))
+            return redirect(url_for('main.dashboard'))
         flash('Invalid credentials. Please try again.', 'danger')
     return render_template('login.html')
 
 # Logout Route
-@main.route('/logout', methods=['POST'])
+@main.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.pop('user_id', None)
-    return redirect(url_for('main.index'))
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('main.home'))
 
 # Add Product Route
+from sqlalchemy.exc import IntegrityError
+
 @main.route('/add-product', methods=['GET', 'POST'])
 def add_product():
+    # Controleer of de gebruiker is ingelogd
     if 'user_id' not in session:
         flash('You need to log in to add a product', 'warning')
         return redirect(url_for('main.login'))
     
     if request.method == 'POST':
+        # Haal gegevens op uit het formulier
         name = request.form['listing_name']
         description = request.form['description']
         picture = request.form['picture']
         status = request.form['status']
         available_calendar = request.form['available_calendar']
+
+        # Maak een nieuw product aan en sla op in de database
         new_product = Product(
             name=name,
             description=description,
@@ -74,11 +86,15 @@ def add_product():
             available_calendar=available_calendar,
             providerID=session['user_id']
         )
+
         db.session.add(new_product)
         db.session.commit()
-        flash('Product added successfully', 'success')
-        return redirect(url_for('main.index'))
-    return render_template('add_listing.html')
+
+        flash('Successfully added a new product!', 'success')
+        return redirect(url_for('main.dashboard'))
+    
+    # Als het een GET-verzoek is, toon het formulier
+    return render_template('add_product.html')
 
 # View All Listings Route
 @main.route('/listings')
@@ -110,7 +126,7 @@ def book_product(product_id):
         db.session.add(new_booking)
         db.session.commit()
         flash('Booking successful', 'success')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
     return render_template('book_product.html', product=product)
 
 # Add Review Route
@@ -131,7 +147,7 @@ def add_review(booking_id):
         db.session.add(new_review)
         db.session.commit()
         flash('Review added successfully', 'success')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.dashboard'))
     return render_template('add_review.html', booking=booking)
 
 # View Notifications Route
@@ -159,11 +175,6 @@ def current_bookings():
     
     user_bookings = Booking.query.filter_by(buyerID=session['user_id']).all()
     return render_template('current_booking.html', bookings=user_bookings)
-
-# Home Route
-@main.route('/home')
-def home():
-    return render_template('home.html')
 
 # Reservation Success Route
 @main.route('/reservation-success')
