@@ -103,20 +103,20 @@ def listings():
     return render_template('listings.html', listings=all_products)
 
 # Book Product Route
-@main.route('/book-product/<int:product_id>', methods=['GET', 'POST'])
-def book_product(product_id):
+@main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
+def book_product(listingID):
     if 'user_id' not in session:
         flash('You need to log in to book a product', 'warning')
         return redirect(url_for('main.login'))
     
-    product = Product.query.get_or_404(product_id)
+    product = Product.query.get_or_404(listingID)
     if request.method == 'POST':
         persons_booked = int(request.form['persons_booked'])
         time = request.form['time']
         commission_fee = float(request.form['commission_fee'])
         booked_calendar = request.form['booked_calendar']
         new_booking = Booking(
-            listingID=product_id,
+            listingID=listingID,
             buyerID=session['user_id'],
             personsBooked=persons_booked,
             time=time,
@@ -180,3 +180,11 @@ def current_bookings():
 @main.route('/reservation-success')
 def reservation_success():
     return render_template('reservation_success.html')
+
+@main.route('/product-details/<int:listingID>')
+def product_details(listingID):
+    product = Product.query.filter_by(listingID=listingID).first()
+    if product:
+        return render_template('product_details.html', product=product)
+    else:
+        return "Product not found", 404

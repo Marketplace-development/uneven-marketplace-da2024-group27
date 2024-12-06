@@ -28,6 +28,7 @@
                         {% if listing.picture %}
                             <img src="{{ listing.picture }}" alt="{{ listing.name }}" style="width:100px;height:auto;">
                         {% endif %}
+                        <a href="/product-details/{{ listing.listingID }}" class="btn">Meer Details</a>
                     </li>
                 {% endfor %}
             </ul>
