@@ -218,3 +218,21 @@ def edit_product(listingID):
     
     # Render de bewerkingspagina
     return render_template('edit_product.html', product=product)
+
+@main.route('/delete-product/<int:listingID>', methods=['POST'])
+def delete_product(listingID):
+    if 'user_id' not in session:
+        flash('You need to log in to delete a product', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Zoek het product op basis van listingID en controleer of de gebruiker de eigenaar is
+    product = Product.query.filter_by(listingID=listingID, providerID=session['user_id']).first()
+    if not product:
+        flash('Product not found or you do not have permission to delete this product.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    # Verwijder het product
+    db.session.delete(product)
+    db.session.commit()
+    flash('Product deleted successfully!', 'success')
+    return redirect(url_for('main.dashboard'))
