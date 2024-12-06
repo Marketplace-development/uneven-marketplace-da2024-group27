@@ -1,7 +1,34 @@
-from flask import Blueprint, request, redirect, url_for, render_template, session, flash
+from flask import Blueprint, request, redirect, url_for, render_template, session, flash, send_file
+from datetime import datetime, timedelta
 from .models import db, User, Product, Booking, Review, Notification
 
+# Blueprint aanmaken
 main = Blueprint('main', __name__)
+
+# Hulpfuncties
+def generate_timeslots(start_time, end_time, slot_duration):
+    current_time = start_time
+    slots = []
+    while current_time < end_time:
+        slot_start = current_time
+        slot_end = current_time + slot_duration
+        slots.append((slot_start, slot_end))
+        current_time = slot_end
+    return slots
+
+def create_ical(timeslots, filename="timeslots.ics"):
+    with open(filename, "w") as file:
+        file.write("BEGIN:VCALENDAR\nVERSION:2.0\n")
+        for i, (start, end) in enumerate(timeslots):
+            file.write("BEGIN:VEVENT\n")
+            file.write(f"UID:{i}@example.com\n")
+            file.write(f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}\n")
+            file.write(f"DTSTART:{start.strftime('%Y%m%dT%H%M%SZ')}\n")
+            file.write(f"DTEND:{end.strftime('%Y%m%dT%H%M%SZ')}\n")
+            file.write(f"SUMMARY:Time Slot {i + 1}\n")
+            file.write(f"DESCRIPTION:Time slot from {start} to {end}\n")
+            file.write("END:VEVENT\n")
+        file.write("END:VCALENDAR\n")
 
 # Homepage Route
 @main.route('/')
@@ -60,11 +87,8 @@ def logout():
     return redirect(url_for('main.home'))
 
 # Add Product Route
-from sqlalchemy.exc import IntegrityError
-
 @main.route('/add-product', methods=['GET', 'POST'])
 def add_product():
-    # Controleer of de gebruiker is ingelogd
     if 'user_id' not in session:
         flash('You need to log in to add a product', 'warning')
         return redirect(url_for('main.login'))
@@ -77,7 +101,17 @@ def add_product():
         status = request.form['status']
         available_calendar = request.form['available_calendar']
 
-        # Maak een nieuw product aan en sla op in de database
+        # Tijdslots genereren
+        start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
+        end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
+        slot_duration = timedelta(minutes=int(request.form['slot_duration']))
+        timeslots = generate_timeslots(start_time, end_time, slot_duration)
+        
+        # iCalendar-bestand maken
+        filename = f"{name}_timeslots.ics"
+        create_ical(timeslots, filename)
+
+        # Product opslaan in database
         new_product = Product(
             name=name,
             description=description,
@@ -86,14 +120,12 @@ def add_product():
             available_calendar=available_calendar,
             providerID=session['user_id']
         )
-
         db.session.add(new_product)
         db.session.commit()
 
         flash('Successfully added a new product!', 'success')
-        return redirect(url_for('main.dashboard'))
-    
-    # Als het een GET-verzoek is, toon het formulier
+        return send_file(filename, as_attachment=True)
+
     return render_template('add_product.html')
 
 # View All Listings Route
@@ -129,62 +161,11 @@ def book_product(listingID):
         return redirect(url_for('main.dashboard'))
     return render_template('book_product.html', product=product)
 
-# Add Review Route
-@main.route('/add-review/<int:booking_id>', methods=['GET', 'POST'])
-def add_review(booking_id):
-    if 'user_id' not in session:
-        flash('You need to log in to leave a review', 'warning')
-        return redirect(url_for('main.login'))
-    
-    booking = Booking.query.get_or_404(booking_id)
-    if request.method == 'POST':
-        score = int(request.form['score'])
-        new_review = Review(
-            score=score,
-            buyerID=session['user_id'],
-            BookingID=booking_id
-        )
-        db.session.add(new_review)
-        db.session.commit()
-        flash('Review added successfully', 'success')
-        return redirect(url_for('main.dashboard'))
-    return render_template('add_review.html', booking=booking)
-
-# View Notifications Route
-@main.route('/notifications')
-def notifications():
-    if 'user_id' not in session:
-        flash('You need to log in to view notifications', 'warning')
-        return redirect(url_for('main.login'))
-    
-    user_notifications = Notification.query.filter_by(receiverID=session['user_id']).all()
-    return render_template('notifications.html', notifications=user_notifications)
-
-# Success Route
-@main.route('/success')
-def success():
-    message = request.args.get('message', 'Your action was successful!')
-    return render_template('success.html', message=message)
-
-# View Current Bookings Route
-@main.route('/current-bookings')
-def current_bookings():
-    if 'user_id' not in session:
-        flash('You need to log in to view your bookings.', 'warning')
-        return redirect(url_for('main.login'))
-    
-    user_bookings = Booking.query.filter_by(buyerID=session['user_id']).all()
-    return render_template('current_booking.html', bookings=user_bookings)
-
-# Reservation Success Route
-@main.route('/reservation-success')
-def reservation_success():
-    return render_template('reservation_success.html')
-
+# Product Details Route
 @main.route('/product-details/<int:listingID>')
 def product_details(listingID):
     product = Product.query.filter_by(listingID=listingID).first()
     if product:
         return render_template('product_details.html', product=product)
-    else:
-        return "Product not found", 404
+    flash('Product not found.', 'danger')
+    return redirect(url_for('main.listings'))

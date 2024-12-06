@@ -21,9 +21,22 @@
             <option value="Unavailable">Unavailable</option>
         </select><br><br>
 
-        <label for="available_calendar">Available Calendar:</label><br>
-        <input type="text" id="available_calendar" name="available_calendar"><br><br>
+        <!-- Nieuwe velden voor tijdslots -->
+        <h2>Generate Calendar Slots</h2>
+        <label for="start_time">Start Time:</label><br>
+        <input type="datetime-local" id="start_time" name="start_time" required><br><br>
 
+        <label for="end_time">End Time:</label><br>
+        <input type="datetime-local" id="end_time" name="end_time" required><br><br>
+
+        <label for="slot_duration">Slot Duration (minutes):</label><br>
+        <input type="number" id="slot_duration" name="slot_duration" required><br><br>
+
+        <!-- Bestaand veld voor beschikbare kalender -->
+        <label for="available_calendar">Available Calendar:</label><br>
+        <input type="text" id="available_calendar" name="available_calendar" placeholder="Optional notes"><br><br>
+
+        <!-- Submit knop -->
         <button type="submit">Add Product</button>
     </form>
     <br>
