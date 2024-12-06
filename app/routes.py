@@ -225,14 +225,22 @@ def delete_product(listingID):
         flash('You need to log in to delete a product', 'warning')
         return redirect(url_for('main.login'))
 
-    # Zoek het product op basis van listingID en controleer of de gebruiker de eigenaar is
     product = Product.query.filter_by(listingID=listingID, providerID=session['user_id']).first()
     if not product:
         flash('Product not found or you do not have permission to delete this product.', 'danger')
         return redirect(url_for('main.dashboard'))
+
+    # Verwijder gekoppelde reviews
+    bookings = Booking.query.filter_by(listingID=listingID).all()
+    for booking in bookings:
+        Review.query.filter_by(BookingID=booking.BookingID).delete()
+
+    # Verwijder gekoppelde bookings
+    Booking.query.filter_by(listingID=listingID).delete()
 
     # Verwijder het product
     db.session.delete(product)
     db.session.commit()
     flash('Product deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
+
