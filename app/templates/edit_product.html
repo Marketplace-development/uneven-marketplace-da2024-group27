@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Product</title>
+</head>
+<body>
+    <h1>Edit Product</h1>
+    <form method="POST">
+        <label for="name">Product Name:</label>
+        <input type="text" id="name" name="name" value="{{ product.name }}" required><br>
+        
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required>{{ product.description }}</textarea><br>
+        
+        <label for="status">Status:</label>
+        <select id="status" name="status">
+            <option value="active" {% if product.status == "active" %}selected{% endif %}>Active</option>
+            <option value="inactive" {% if product.status == "inactive" %}selected{% endif %}>Inactive</option>
+        </select><br>
+        
+        <button type="submit">Save Changes</button>
+    </form>
+</body>
+</html>

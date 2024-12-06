@@ -14,14 +14,16 @@ def generate_timeslots(start_time, end_time, slot_duration):
         current_time = slot_end
     return slots
 
-import os
-
 def create_ical(timeslots, filename="timeslots.ics"):
-    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'generated_files')  # Map voor gegenereerde bestanden
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Zorg dat de map bestaat
+    # Zorg ervoor dat de map voor bestanden bestaat
+    UPLOAD_FOLDER = os.path.join(os.getcwd(), 'generated_files')  # Map voor opslag
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Maakt de map aan als deze niet bestaat
+
+    # Bepaal het volledige bestandspad
     filepath = os.path.join(UPLOAD_FOLDER, filename)
 
     try:
+        # Schrijf de iCalendar-inhoud naar het bestand
         with open(filepath, "w") as file:
             file.write("BEGIN:VCALENDAR\nVERSION:2.0\n")
             for i, (start, end) in enumerate(timeslots):
@@ -35,12 +37,11 @@ def create_ical(timeslots, filename="timeslots.ics"):
                 file.write("END:VEVENT\n")
             file.write("END:VCALENDAR\n")
     except Exception as e:
-        print(f"Error creating iCalendar file: {e}")
+        print(f"Error while creating iCalendar file: {e}")
         return None
 
+    # Controleer of het bestand is aangemaakt
     if os.path.exists(filepath):
         return filepath
     else:
         return None
-
-

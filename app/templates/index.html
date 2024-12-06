@@ -29,6 +29,7 @@
                             <img src="{{ listing.picture }}" alt="{{ listing.name }}" style="width:100px;height:auto;">
                         {% endif %}
                         <a href="/product-details/{{ listing.listingID }}" class="btn">Meer Details</a>
+                        <a href="{{ url_for('main.edit_product', listingID=listing.listingID) }}">Edit</a>
                     </li>
                 {% endfor %}
             </ul>

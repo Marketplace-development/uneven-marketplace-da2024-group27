@@ -123,6 +123,8 @@ def add_product():
         if filepath is None:
             raise ValueError("create_ical did not return a valid filepath")
 
+        import os
+
         # Validatie van het bestandspad
         if not isinstance(filepath, str):
             raise TypeError(f"Expected a string for filepath, got {type(filepath)}")
@@ -188,3 +190,31 @@ def product_details(listingID):
         return render_template('product_details.html', product=product)
     flash('Product not found.', 'danger')
     return redirect(url_for('main.listings'))
+
+# Edit Product Route
+@main.route('/edit-product/<int:listingID>', methods=['GET', 'POST'])
+def edit_product(listingID):
+    if 'user_id' not in session:
+        flash('You need to log in to edit a product', 'warning')
+        return redirect(url_for('main.login'))
+    
+    product = Product.query.filter_by(listingID=listingID, providerID=session['user_id']).first()
+    if not product:
+        flash('Product not found or you do not have permission to edit this product.', 'danger')
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        # Update the product details
+        product.name = request.form['listing_name']
+        product.description = request.form['description']
+        product.picture = request.form['picture']
+        product.status = request.form['status']
+        product.available_calendar = request.form['available_calendar']
+        
+        # Commit the changes to the database
+        db.session.commit()
+        flash('Product updated successfully!', 'success')
+        return redirect(url_for('main.dashboard'))
+    
+    # Render the edit product page with the current product details
+    return render_template('edit_product.html', product=product)
