@@ -1,6 +1,8 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash, send_file
 from datetime import datetime, timedelta
 from .models import db, User, Product, Booking, Review, Notification
+from .utils import generate_timeslots, create_ical
+
 
 # Blueprint aanmaken
 main = Blueprint('main', __name__)
@@ -94,24 +96,40 @@ def add_product():
         return redirect(url_for('main.login'))
     
     if request.method == 'POST':
-        # Haal gegevens op uit het formulier
+        # Gegevens ophalen uit formulier
         name = request.form['listing_name']
         description = request.form['description']
         picture = request.form['picture']
         status = request.form['status']
         available_calendar = request.form['available_calendar']
 
-        # Tijdslots genereren
-        start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
-        end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-        slot_duration = timedelta(minutes=int(request.form['slot_duration']))
-        timeslots = generate_timeslots(start_time, end_time, slot_duration)
-        
-        # iCalendar-bestand maken
-        filename = f"{name}_timeslots.ics"
-        create_ical(timeslots, filename)
+        # Validatie van tijdgerelateerde invoer
+        try:
+            slot_duration = int(request.form['slot_duration'])  # Zorg dat het een int is
+            start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
+            end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
+        except ValueError:
+            flash('Invalid input format. Please check your time inputs.', 'danger')
+            return redirect(url_for('main.add_product'))
 
-        # Product opslaan in database
+        # Tijdslots genereren
+        timeslots = generate_timeslots(start_time, end_time, timedelta(minutes=slot_duration))
+
+        # iCalendar-bestand aanmaken
+        filename = f"{name}_timeslots.ics"
+        filepath = create_ical(timeslots, filename)
+
+        # Controleer of een geldig pad is geretourneerd
+        if filepath is None:
+            raise ValueError("create_ical did not return a valid filepath")
+
+        # Validatie van het bestandspad
+        if not isinstance(filepath, str):
+            raise TypeError(f"Expected a string for filepath, got {type(filepath)}")
+        if not os.path.exists(filepath):
+            raise FileNotFoundError(f"Filepath does not exist: {filepath}")
+
+        # Product opslaan in de database
         new_product = Product(
             name=name,
             description=description,
@@ -123,8 +141,9 @@ def add_product():
         db.session.add(new_product)
         db.session.commit()
 
+        # Bestand verzenden
         flash('Successfully added a new product!', 'success')
-        return send_file(filename, as_attachment=True)
+        return send_file(filepath, as_attachment=True, download_name=filename, mimetype='text/calendar')
 
     return render_template('add_product.html')
 
