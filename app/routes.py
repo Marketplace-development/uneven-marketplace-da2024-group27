@@ -134,11 +134,12 @@ def book_product(listingID):
 def product_details(listingID):
     product = Product.query.filter_by(listingID=listingID).first_or_404()
 
-    # Haal alle boekingen op die bij dit product horen
+    # Haal alle boekingen op
     bookings = Booking.query.filter_by(listingID=listingID).all()
 
-    # Verzamel alle reviews die bij deze boekingen horen
+    # Haal alle reviews op en controleer op geldige buyers
     reviews = Review.query.join(Booking).filter(Booking.listingID == listingID).all()
+    valid_reviews = [review for review in reviews if review.buyer]
 
     # Bereken de gemiddelde score
     average_score = (
@@ -151,7 +152,7 @@ def product_details(listingID):
     return render_template(
         'product_details.html',
         product=product,
-        reviews=reviews,
+        reviews=valid_reviews,
         average_score=round(average_score, 2) if average_score else None
     )
 

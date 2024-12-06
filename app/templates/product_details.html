@@ -28,7 +28,11 @@
             {% for review in reviews %}
                 <li>
                     <strong>Rating:</strong> {{ review.score }}/5<br>
-                    <strong>Reviewer:</strong> {{ review.buyer.userName }}
+                    {% if review.buyer %}
+                        <strong>Reviewer:</strong> {{ review.buyer.userName }}
+                    {% else %}
+                        <strong>Reviewer:</strong> Anonymous
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
