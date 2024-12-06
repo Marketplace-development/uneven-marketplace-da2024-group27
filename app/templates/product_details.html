@@ -2,25 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }}</title>
 </head>
 <body>
-    <header>
-        <h1>{{ product.name }}</h1>
-    </header>
-    
-    <main>
-        <p>{{ product.description }}</p>
-        <p>Status: {{ product.status }}</p>
-        {% if product.picture %}
-            <img src="{{ product.picture }}" alt="{{ product.name }}" style="width:300px;height:auto;">
-        {% endif %}
-        <a href="{{ url_for('main.listings') }}">Terug naar overzicht</a>
-    </main>
-    
-    <footer>
-        <p>&copy; 2024 GardenLend</p>
-    </footer>
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+
+    <!-- Product afbeelding -->
+    {% if product.picture %}
+        <img src="{{ product.picture }}" alt="{{ product.name }}" style="max-width: 300px; max-height: 300px;">
+    {% else %}
+        <p>No image available for this product.</p>
+    {% endif %}
+
+    <h2>Average Rating</h2>
+    {% if average_score %}
+        <p>Average Score: {{ average_score }}/5</p>
+    {% else %}
+        <p>No ratings yet for this product.</p>
+    {% endif %}
+
+    <h2>Reviews</h2>
+    {% if reviews %}
+        <ul>
+            {% for review in reviews %}
+                <li>
+                    <strong>Rating:</strong> {{ review.score }}/5<br>
+                    <strong>Reviewer:</strong> {{ review.buyer.userName }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews yet for this product.</p>
+    {% endif %}
+
+    <a href="{{ url_for('main.add_review', bookingID=product.listingID) }}">Add Review</a>
+    <a href="{{ url_for('main.listings') }}">Back to Listings</a>
 </body>
 </html>

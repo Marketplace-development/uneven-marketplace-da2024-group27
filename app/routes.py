@@ -132,11 +132,28 @@ def book_product(listingID):
 # Product Details Route
 @main.route('/product-details/<int:listingID>')
 def product_details(listingID):
-    product = Product.query.filter_by(listingID=listingID).first()
-    if product:
-        return render_template('product_details.html', product=product)
-    flash('Product not found.', 'danger')
-    return redirect(url_for('main.listings'))
+    product = Product.query.filter_by(listingID=listingID).first_or_404()
+
+    # Haal alle boekingen op die bij dit product horen
+    bookings = Booking.query.filter_by(listingID=listingID).all()
+
+    # Verzamel alle reviews die bij deze boekingen horen
+    reviews = Review.query.join(Booking).filter(Booking.listingID == listingID).all()
+
+    # Bereken de gemiddelde score
+    average_score = (
+        db.session.query(db.func.avg(Review.score))
+        .join(Booking)
+        .filter(Booking.listingID == listingID)
+        .scalar()
+    )
+
+    return render_template(
+        'product_details.html',
+        product=product,
+        reviews=reviews,
+        average_score=round(average_score, 2) if average_score else None
+    )
 
 # Edit Product Route
 @main.route('/edit-product/<int:listingID>', methods=['GET', 'POST'])
@@ -191,3 +208,33 @@ def delete_product(listingID):
     flash('Product deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
 
+@main.route('/booking/<int:bookingID>/add-review', methods=['GET', 'POST'])
+def add_review(bookingID):
+    # Controleer of de boeking bestaat
+    booking = Booking.query.get_or_404(bookingID)
+
+    # Controleer of de gebruiker de eigenaar van de boeking is
+    if booking.buyerID != session.get('user_id'):
+        flash("You are not authorized to review this booking.", "danger")
+        return redirect(url_for('main.dashboard'))
+
+    if request.method == 'POST':
+        score = request.form.get('score')
+
+        # Validatie
+        if not score or int(score) < 1 or int(score) > 5:
+            flash("Please provide a valid score between 1 and 5.", "danger")
+            return redirect(url_for('main.add_review', bookingID=bookingID))
+
+        # Voeg de review toe
+        review = Review(
+            score=int(score),
+            buyerID=session.get('user_id'),
+            BookingID=booking.BookingID
+        )
+        db.session.add(review)
+        db.session.commit()
+        flash("Review added successfully!", "success")
+        return redirect(url_for('main.dashboard'))
+
+    return render_template('add_review.html', booking=booking)

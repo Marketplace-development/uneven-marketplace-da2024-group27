@@ -1,4 +1,25 @@
-<form method="post">
-    Score: <input type="number" name="score" min="1" max="5" required><br>
-    <input type="submit" value="Add Review">
- </form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Review</title>
+</head>
+<body>
+    <h1>Leave a Review</h1>
+    
+    <form method="POST" action="{{ url_for('main.add_review', bookingID=booking.BookingID) }}">
+        <label for="score">Rating (1-5):</label>
+        <select id="score" name="score" required>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+        </select>
+
+        <button type="submit">Submit Review</button>
+    </form>
+
+    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
