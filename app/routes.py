@@ -204,17 +204,17 @@ def edit_product(listingID):
         return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
-        # Update the product details
+        # Update de gegevens van het product
         product.name = request.form['listing_name']
         product.description = request.form['description']
         product.picture = request.form['picture']
         product.status = request.form['status']
         product.available_calendar = request.form['available_calendar']
         
-        # Commit the changes to the database
+        # Opslaan in de database
         db.session.commit()
         flash('Product updated successfully!', 'success')
         return redirect(url_for('main.dashboard'))
     
-    # Render the edit product page with the current product details
+    # Render de bewerkingspagina
     return render_template('edit_product.html', product=product)
