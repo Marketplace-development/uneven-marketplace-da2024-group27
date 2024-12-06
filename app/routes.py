@@ -1,36 +1,9 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash, send_file
 from datetime import datetime, timedelta
 from .models import db, User, Product, Booking, Review, Notification
-from .utils import generate_timeslots, create_ical
-
 
 # Blueprint aanmaken
 main = Blueprint('main', __name__)
-
-# Hulpfuncties
-def generate_timeslots(start_time, end_time, slot_duration):
-    current_time = start_time
-    slots = []
-    while current_time < end_time:
-        slot_start = current_time
-        slot_end = current_time + slot_duration
-        slots.append((slot_start, slot_end))
-        current_time = slot_end
-    return slots
-
-def create_ical(timeslots, filename="timeslots.ics"):
-    with open(filename, "w") as file:
-        file.write("BEGIN:VCALENDAR\nVERSION:2.0\n")
-        for i, (start, end) in enumerate(timeslots):
-            file.write("BEGIN:VEVENT\n")
-            file.write(f"UID:{i}@example.com\n")
-            file.write(f"DTSTAMP:{datetime.now().strftime('%Y%m%dT%H%M%SZ')}\n")
-            file.write(f"DTSTART:{start.strftime('%Y%m%dT%H%M%SZ')}\n")
-            file.write(f"DTEND:{end.strftime('%Y%m%dT%H%M%SZ')}\n")
-            file.write(f"SUMMARY:Time Slot {i + 1}\n")
-            file.write(f"DESCRIPTION:Time slot from {start} to {end}\n")
-            file.write("END:VEVENT\n")
-        file.write("END:VCALENDAR\n")
 
 # Homepage Route
 @main.route('/')
@@ -91,47 +64,20 @@ def logout():
 # Add Product Route
 @main.route('/add-product', methods=['GET', 'POST'])
 def add_product():
+    # Controleer of de gebruiker is ingelogd
     if 'user_id' not in session:
         flash('You need to log in to add a product', 'warning')
         return redirect(url_for('main.login'))
     
     if request.method == 'POST':
-        # Gegevens ophalen uit formulier
+        # Haal gegevens op uit het formulier
         name = request.form['listing_name']
         description = request.form['description']
         picture = request.form['picture']
         status = request.form['status']
         available_calendar = request.form['available_calendar']
 
-        # Validatie van tijdgerelateerde invoer
-        try:
-            slot_duration = int(request.form['slot_duration'])  # Zorg dat het een int is
-            start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
-            end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-        except ValueError:
-            flash('Invalid input format. Please check your time inputs.', 'danger')
-            return redirect(url_for('main.add_product'))
-
-        # Tijdslots genereren
-        timeslots = generate_timeslots(start_time, end_time, timedelta(minutes=slot_duration))
-
-        # iCalendar-bestand aanmaken
-        filename = f"{name}_timeslots.ics"
-        filepath = create_ical(timeslots, filename)
-
-        # Controleer of een geldig pad is geretourneerd
-        if filepath is None:
-            raise ValueError("create_ical did not return a valid filepath")
-
-        import os
-
-        # Validatie van het bestandspad
-        if not isinstance(filepath, str):
-            raise TypeError(f"Expected a string for filepath, got {type(filepath)}")
-        if not os.path.exists(filepath):
-            raise FileNotFoundError(f"Filepath does not exist: {filepath}")
-
-        # Product opslaan in de database
+        # Maak een nieuw product aan en sla op in de database
         new_product = Product(
             name=name,
             description=description,
@@ -140,13 +86,14 @@ def add_product():
             available_calendar=available_calendar,
             providerID=session['user_id']
         )
+
         db.session.add(new_product)
         db.session.commit()
 
-        # Bestand verzenden
         flash('Successfully added a new product!', 'success')
-        return send_file(filepath, as_attachment=True, download_name=filename, mimetype='text/calendar')
-
+        return redirect(url_for('main.dashboard'))
+    
+    # Als het een GET-verzoek is, toon het formulier
     return render_template('add_product.html')
 
 # View All Listings Route
