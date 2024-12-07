@@ -2,8 +2,11 @@
 <html>
 <head>
     <title>Add New Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
 </head>
-<body>
+<body class="add-product-container">
     <h1>Add a New Product</h1>
     <form action="/add-product" method="POST">
         <label for="listing_name">Product Name:</label><br>
