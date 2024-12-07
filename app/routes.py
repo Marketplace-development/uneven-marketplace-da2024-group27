@@ -31,6 +31,7 @@ def create_ical(timeslots, filename="timeslots.ics"):
             file.write(f"DESCRIPTION:Time slot from {start} to {end}\n")
             file.write("END:VEVENT\n")
         file.write("END:VCALENDAR\n")
+    return os.getcwd() + "/" + filename
 
 # Homepage Route
 @main.route('/')
