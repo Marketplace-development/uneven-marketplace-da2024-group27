@@ -725,3 +725,135 @@ h1 {
         text-align: center;
     }
 }  
+/* Algemene stijlen voor de Edit Product pagina */
+.edit-product-container {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Hoofd koptekst voor de pagina */
+.edit-product-container h1 {
+    font-size: 2rem;
+    color: #ffffff;
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Formulierstijlen */
+.edit-product-container form {
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+}
+
+/* Labels voor invoervelden */
+.edit-product-container form label {
+    display: block;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+/* Invoervelden, tekstgebieden, en select elementen */
+.edit-product-container form input[type="text"],
+.edit-product-container form input[type="number"],
+.edit-product-container form input[type="datetime-local"],
+.edit-product-container form select,
+.edit-product-container form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #333;
+}
+
+/* Textarea specifieke stijlen */
+.edit-product-container form textarea {
+    resize: vertical;
+}
+
+/* Focus-effect voor invoervelden */
+.edit-product-container form input[type="text"]:focus,
+.edit-product-container form input[type="number"]:focus,
+.edit-product-container form input[type="datetime-local"]:focus,
+.edit-product-container form select:focus,
+.edit-product-container form textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* Subtitel voor kalendersectie */
+.edit-product-container h2 {
+    color: #4CAF50;
+    font-size: 1.2rem;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+/* Submitknop */
+.edit-product-container button[type="submit"] {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.edit-product-container button[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* Link voor terug naar dashboard */
+.edit-product-container a {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007BFF;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.edit-product-container a:hover {
+    background-color: #0056b3;
+}
+
+/* Responsieve stijlen voor kleinere schermen */
+@media (max-width: 768px) {
+    .edit-product-container form {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .edit-product-container h1 {
+        font-size: 1.8rem;
+    }
+
+    .edit-product-container h2 {
+        font-size: 1rem;
+    }
+
+    .edit-product-container button[type="submit"] {
+        padding: 12px 20px;
+    }
+}
