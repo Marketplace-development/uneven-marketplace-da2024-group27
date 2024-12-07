@@ -146,8 +146,7 @@ def add_product():
 
         # Bestand verzenden
         flash('Successfully added a new product!', 'success')
-        return send_file(filepath, as_attachment=True, download_name=filename, mimetype='text/calendar')
-
+        return redirect(url_for('main.dashboard'))
     return render_template('add_product.html')
 
 # View All Listings Route
