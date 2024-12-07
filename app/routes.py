@@ -222,16 +222,42 @@ def edit_product(listingID):
         return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
-        # Update de gegevens van het product
+        # Update de basisgegevens van het product
         product.name = request.form['listing_name']
         product.description = request.form['description']
         product.picture = request.form['picture']
         product.status = request.form['status']
         product.available_calendar = request.form['available_calendar']
-        
+
+        # Kalenderinformatie ophalen en valideren
+        try:
+            start_time = request.form['start_time']
+            end_time = request.form['end_time']
+            slot_duration = int(request.form['slot_duration'])
+
+            # Valideer tijd
+            start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
+            end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
+            if start_time_dt >= end_time_dt:
+                flash('Start time must be before end time.', 'danger')
+                return redirect(url_for('main.edit_product', listingID=listingID))
+
+            # Genereer tijdslots
+            timeslots = generate_timeslots(start_time_dt, end_time_dt, timedelta(minutes=slot_duration))
+
+            # Optioneel: Maak een iCalendar-bestand
+            filename = f"{product.name}_timeslots.ics"
+            create_ical(timeslots, filename)
+
+            # Sla nieuwe kalenderinformatie op
+            product.available_calendar = [start_time, end_time]
+        except ValueError:
+            flash('Invalid input format. Please check your time inputs.', 'danger')
+            return redirect(url_for('main.edit_product', listingID=listingID))
+
         # Opslaan in de database
         db.session.commit()
-        flash('Product updated successfully!', 'success')
+        flash('Product updated successfully, including calendar!', 'success')
         return redirect(url_for('main.dashboard'))
     
     # Render de bewerkingspagina

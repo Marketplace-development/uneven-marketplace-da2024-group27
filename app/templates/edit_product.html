@@ -1,21 +1,31 @@
-<form method="POST">
+<form method="POST" action="{{ url_for('main.edit_product', listingID=product.listingID) }}">
     <label for="listing_name">Product Name:</label>
     <input type="text" id="listing_name" name="listing_name" value="{{ product.name }}" required><br>
 
     <label for="description">Description:</label>
-    <textarea id="description" name="description" required>{{ product.description }}</textarea><br>
+    <textarea id="description" name="description" rows="4" cols="50">{{ product.description }}</textarea><br>
 
     <label for="picture">Picture URL:</label>
-    <input type="text" id="picture" name="picture" value="{{ product.picture }}" required><br>
+    <input type="text" id="picture" name="picture" value="{{ product.picture }}"><br>
 
     <label for="status">Status:</label>
-    <select id="status" name="status">
-        <option value="active" {% if product.status == 'active' %}selected{% endif %}>Active</option>
-        <option value="inactive" {% if product.status == 'inactive' %}selected{% endif %}>Inactive</option>
+    <select id="status" name="status" required>
+        <option value="Active" {% if product.status == "Active" %}selected{% endif %}>Active</option>
+        <option value="Inactive" {% if product.status == "Inactive" %}selected{% endif %}>Inactive</option>
     </select><br>
 
+    <h2>Edit Calendar Slots</h2>
+    <label for="start_time">Start Time:</label>
+    <input type="datetime-local" id="start_time" name="start_time" value="{{ product.available_calendar[0] if product.available_calendar }}"><br>
+
+    <label for="end_time">End Time:</label>
+    <input type="datetime-local" id="end_time" name="end_time" value="{{ product.available_calendar[1] if product.available_calendar }}"><br>
+
+    <label for="slot_duration">Slot Duration (minutes):</label>
+    <input type="number" id="slot_duration" name="slot_duration" min="1"><br>
+
     <label for="available_calendar">Available Calendar:</label>
-    <input type="text" id="available_calendar" name="available_calendar" value="{{ product.available_calendar }}" required><br>
+    <input type="text" id="available_calendar" name="available_calendar" value="{{ product.available_calendar | join(', ') }}"><br>
 
     <button type="submit">Save Changes</button>
 </form>
