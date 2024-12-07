@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Review</title>
 </head>
 <body>
     <h1>Leave a Review</h1>
     
-    <form method="POST" action="{{ url_for('main.add_review', bookingID=booking.BookingID) }}">
+    <!-- Formulier voor het indienen van een review -->
+    <form method="POST" action="{{ url_for('main.add_review', BookingID=booking.BookingID) }}">
         <label for="score">Rating (1-5):</label>
         <select id="score" name="score" required>
             <option value="1">1</option>
@@ -20,6 +22,7 @@
         <button type="submit">Submit Review</button>
     </form>
 
+    <!-- Link om terug te keren naar het dashboard -->
     <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
 </body>
 </html>

@@ -40,7 +40,7 @@
         <p>No reviews yet for this product.</p>
     {% endif %}
 
-    <a href="{{ url_for('main.add_review', bookingID=product.listingID) }}">Add Review</a>
+    <a href="{{ url_for('main.add_review', BookingID=product.listingID) }}">Add Review</a>
     <a href="{{ url_for('main.listings') }}">Back to Listings</a>
 </body>
 </html>

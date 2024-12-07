@@ -17,7 +17,7 @@
                        <p><strong>Persons Booked:</strong> {{ booking.personsBooked }}</p>
                        <p><strong>Commission Fee:</strong> ${{ "%.2f"|format(booking.commissionfee) }}</p>
                        <p><strong>Booked Calendar:</strong> {{ booking.booked_calendar }}</p>
-                       <a href="{{ url_for('main.add_review', booking_id=booking.id) }}">Leave a Review</a>
+                       <a href="{{ url_for('main.add_review', BookingID=BookingID) }}">Leave a Review</a>
                    </li>
                {% endfor %}
            </ul>
