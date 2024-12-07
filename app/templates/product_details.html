@@ -15,6 +15,9 @@
         <p>No image available for this product.</p>
     {% endif %}
 
+    <h2>Available timeslot</h2>
+    <p>{{ product.available_calendar }}</p>
+
     <h2>Average Rating</h2>
     {% if average_score %}
         <p>Average Score: {{ average_score }}/5</p>
