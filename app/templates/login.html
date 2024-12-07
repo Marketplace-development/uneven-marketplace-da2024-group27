@@ -1,7 +1,19 @@
-<h1>Login</h1>
-<form method="post">
-   Username: <input type="text" name="username" required><br>
-   Email: <input type="email" name="email" required><br>
-   Auth ID: <input type="text" name="auth_id" required><br>
-   <input type="submit" value="Login">
-</form>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="login-container">
+    <h1>Login</h1>
+    <form method="post" class="login-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        
+        <label for="auth_id">Auth ID:</label>
+        <input type="text" id="auth_id" name="auth_id" required><br>
+        
+        <input type="submit" value="Login" class="btn">
+    </form>
+</div>
+{% endblock %}

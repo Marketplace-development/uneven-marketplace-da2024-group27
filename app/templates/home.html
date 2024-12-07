@@ -1,12 +1,12 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Welcome to GardenLend</title>
-</head>
-<body>
-    <h1>Welcome to GardenLend</h1>
-    <p>Discover tools and equipment for your gardening needs!</p>
-    <a href="/login"><button>Login</button></a>
-    <a href="/register"><button>Register</button></a>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+    <h1>Huur en verhuur tuinartikelen eenvoudig!</h1>
+    <p>Sluit je aan bij onze community en deel je gereedschap.</p>
+    <div class="buttons">
+        <a href="{{ url_for('main.login') }}" class="btn">Login</a>
+        <a href="{{ url_for('main.register') }}" class="btn">Registreren</a>
+    </div>
+</div>
+{% endblock %}
