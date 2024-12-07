@@ -16,7 +16,11 @@
     {% endif %}
 
     <h2>Available timeslot</h2>
-    <p>{{ product.available_calendar }}</p>
+    <ul>
+        {% for date in product.available_calendar[1:-1].split(",") %}
+            <li>{{ date.split("T")[0] }} : {{date.split("T")[1]}}</li>
+        {% endfor %}
+    </ul>
 
     <h2>Average Rating</h2>
     {% if average_score %}

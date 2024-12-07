@@ -102,7 +102,9 @@ def add_product():
         description = request.form['description']
         picture = request.form['picture']
         status = request.form['status']
-        available_calendar = request.form['available_calendar']
+        start_time = request.form['start_time']
+        end_time = request.form['end_time']
+        available_calendar = [start_time, end_time]
 
         # Validatie van tijdgerelateerde invoer
         try:
