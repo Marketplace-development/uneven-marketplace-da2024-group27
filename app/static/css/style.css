@@ -243,7 +243,7 @@ a {
 }
 
 .btn-secondary {
-    background-color: #007BFF;
+    background-color: #45a049;
     color: white;
 }
 
@@ -271,7 +271,7 @@ a {
 }
 
 .btn-secondary:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
 }
 
 .btn-delete:hover {
@@ -691,7 +691,7 @@ h1 {
 .back-home {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: #45a049;
     color: white;
     text-decoration: none;
     border-radius: 5px;
@@ -702,7 +702,7 @@ h1 {
 }
 
 .back-home:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
 }
 
 /* Responsieve stijlen voor kleinere schermen */
@@ -766,20 +766,21 @@ h1 {
     font-weight: bold;
 }
 
-/* Invoervelden, tekstgebieden, en select elementen */
 .edit-product-container form input[type="text"],
 .edit-product-container form input[type="number"],
 .edit-product-container form input[type="datetime-local"],
 .edit-product-container form select,
 .edit-product-container form textarea {
-    width: 100%;
+    width: calc(100% - 20px); /* Zorg voor ruimte aan beide kanten */
     padding: 10px;
-    margin-bottom: 15px;
+    margin: 0 auto 15px; /* Houd het gecentreerd */
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 1rem;
     color: #333;
+    box-sizing: border-box; /* Zorg ervoor dat padding bij de breedte hoort */
 }
+
 
 /* Textarea specifieke stijlen */
 .edit-product-container form textarea {
@@ -826,17 +827,20 @@ h1 {
 /* Link voor terug naar dashboard */
 .edit-product-container a {
     display: inline-block;
-    margin-top: 20px;
     padding: 10px 20px;
-    background-color: #007BFF;
+    background-color: #45a049;
     color: white;
     text-decoration: none;
     border-radius: 5px;
+    margin-top: 30px;
     text-align: center;
+    width: 100%;
+    transition: background-color 0.3s ease;
 }
 
+
 .edit-product-container a:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
 }
 
 /* Responsieve stijlen voor kleinere schermen */
