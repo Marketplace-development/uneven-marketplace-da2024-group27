@@ -208,8 +208,9 @@ a {
 }
 
 .product-image {
-    max-width: 150px;
-    height: auto;
+    width: 150px; /* Breedte van het kader */
+    height: 150px; /* Hoogte van het kader */
+    object-fit: cover; 
     border-radius: 5px;
     margin: 10px 0;
 }
