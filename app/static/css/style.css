@@ -226,6 +226,20 @@ a {
     padding-left: 15px;
 }
 
+.fixed-actions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999; /* Zorg ervoor dat ze altijd zichtbaar zijn boven andere elementen */
+}
+
+.fixed-actions .btn {
+    width: auto; /* Zorg ervoor dat de breedte van de knoppen flexibel blijft */
+}
+
 /* Knoppen styling */
 .btn {
     display: inline-block;
@@ -234,6 +248,7 @@ a {
     font-weight: bold;
     text-align: center;
     border-radius: 5px;
+    border: none;
     transition: background-color 0.3s ease, transform 0.2s ease;
     cursor: pointer;
 }
@@ -287,51 +302,6 @@ a {
     background-color: #4CAF50;
     color: white;
     margin-top: 20px;
-}
-
-/* Plaats knoppen rechtsonder */
-.btn-fixed-container {
-    position: fixed;
-    bottom: 20px; /* Afstand vanaf de onderkant van het scherm */
-    right: 20px; /* Afstand vanaf de rechterkant van het scherm */
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* Ruimte tussen de knoppen */
-    z-index: 1000; /* Zorg ervoor dat ze altijd bovenaan staan */
-}
-
-.btn-fixed {
-    display: inline-block;
-    padding: 10px 15px;
-    font-size: 1rem;
-    font-weight: bold;
-    text-align: center;
-    border-radius: 5px;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
-}
-
-.btn-fixed-primary {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.btn-fixed-secondary {
-    background-color: #45a049;
-    color: white;
-}
-
-.btn-fixed:hover {
-    transform: scale(1.05);
-}
-
-.btn-fixed-primary:hover {
-    background-color: #45a049;
-}
-
-.btn-fixed-secondary:hover {
-    background-color: #43a047;
 }
 
 /* Loginpagina styling */
