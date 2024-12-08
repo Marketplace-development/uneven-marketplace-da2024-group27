@@ -17,11 +17,18 @@
 
     <h2>Available Period</h2>
     <p>
-        {% set dates = product.available_calendar[1:-1].split(",") %}
+        {% set dates = product.available_calendar[1:-1].split(",") if product.available_calendar %}
         {% for i in range(0, dates|length, 2) %}
             From: {{ dates[i].split("T")[0] }} {{ dates[i].split("T")[1] }}<br>
-            To: {{ dates[i+1].split("T")[0] }} {{ dates[i+1].split("T")[1] }}<br><br>
+            {% if i+1 < dates|length %}
+                To: {{ dates[i+1].split("T")[0] }} {{ dates[i+1].split("T")[1] }}<br><br>
+            {% else %}
+                <strong>Error:</strong> End date is missing for this period.<br><br>
+            {% endif %}
         {% endfor %}
+        {% if not dates %}
+            <strong>No available periods for this product.</strong>
+        {% endif %}
     </p>
     
     <h2>Average Rating</h2>
