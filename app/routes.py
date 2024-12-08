@@ -155,9 +155,6 @@ def listings():
     all_products = Product.query.all()
     return render_template('listings.html', listings=all_products)
 
-# Book Product Route
-from datetime import datetime
-
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
     # Controleer of de gebruiker is ingelogd
@@ -165,6 +162,7 @@ def book_product(listingID):
         flash('You need to log in to book a product', 'warning')
         return redirect(url_for('main.login'))
 
+    # Haal het product op
     product = Product.query.get_or_404(listingID)
 
     # Parse de beschikbare kalender (start en einddatum)
@@ -174,20 +172,23 @@ def book_product(listingID):
     
     if request.method == 'POST':
         try:
-            # Haal gegevens op uit het formulier
+            # Debug-informatie
+            print("Form data received:", request.form)
+
+            # Haal gegevens uit het formulier op
             start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
             end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-            commission_fee = 0.25  # Vast bedrag voor commissie
+            commission_fee = float(request.form['commission_fee'])
 
-            # Controleer of de geboekte tijden binnen de beschikbare periode vallen
+            # Controleer of de geselecteerde periode binnen de beschikbare periode valt
             available_start = datetime.strptime(available_calendar[0], '%Y-%m-%dT%H:%M')
             available_end = datetime.strptime(available_calendar[1], '%Y-%m-%dT%H:%M')
             if not (available_start <= start_time < end_time <= available_end):
-                flash('Selected time is not within the available period.', 'danger')
+                flash("Selected time is not within the available period.", "danger")
                 return redirect(url_for('main.book_product', listingID=listingID))
 
             # Voeg nieuwe booking toe
-            booked_calendar = f"{start_time} - {end_time}"
+            booked_calendar = f"{start_time.strftime('%Y-%m-%d %H:%M')} - {end_time.strftime('%Y-%m-%d %H:%M')}"
             new_booking = Booking(
                 listingID=listingID,
                 buyerID=session['user_id'],
@@ -206,11 +207,17 @@ def book_product(listingID):
             db.session.add(new_notification)
             db.session.commit()
 
-            flash(f"{product.name} was successfully booked!", "success")
-            return redirect(url_for('main.dashboard'))
+            # Debugging de redirect
+            print("Redirecting to booking success page...")
+            return redirect(url_for('main.booking_success', product_name=product.name))
 
         except ValueError as e:
+            print(f"Validation error: {e}")
             flash(f"Invalid input: {str(e)}", 'danger')
+            return redirect(url_for('main.book_product', listingID=listingID))
+        except Exception as e:
+            print(f"Unexpected error: {e}")
+            flash("An unexpected error occurred while processing your booking.", "danger")
             return redirect(url_for('main.book_product', listingID=listingID))
 
     return render_template(
@@ -218,6 +225,11 @@ def book_product(listingID):
         product=product,
         available_calendar=available_calendar
     )
+
+@main.route('/booking-success')
+def booking_success():
+    product_name = request.args.get('product_name', 'Product')
+    return redirect(url_for('main.booking_success', product_name=product_name))
 
 # Product Details Route
 @main.route('/product-details/<int:listingID>')

@@ -1,5 +1,5 @@
 <h2>Book Product: {{ product.name }}</h2>
-<p><strong>Available Period:</strong> From {{ available_calendar[0] }} to {{ available_calendar[1] }}</p>
+<p><strong>Available Period:</strong> From: {{ available_calendar[0] }} To: {{ available_calendar[1] }}</p>
 
 <form method="POST" action="{{ url_for('main.book_product', listingID=product.listingID) }}">
     <label for="start_time">Start Time:</label>
@@ -9,8 +9,9 @@
     <input type="datetime-local" id="end_time" name="end_time" required><br>
 
     <label for="commission_fee">Commission Fee:</label>
-    <input type="number" id="commission_fee" name="commission_fee" value="0.25" readonly><br> <!-- Vastgezet op 0.25 -->
+    <input type="text" id="commission_fee" name="commission_fee" value="0.25" readonly><br>
 
     <button type="submit">Book Now</button>
 </form>
+
 <a href="{{ url_for('main.listings') }}">Back to Listings</a>
