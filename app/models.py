@@ -37,7 +37,7 @@ class Product(db.Model):
 class Booking(db.Model):
     __tablename__ = 'Booking'  # Adjusted to match the image
     BookingID = db.Column(db.Integer, primary_key=True)
-    personsBooked = db.Column(db.Integer, nullable=False)
+    personsBooked = db.Column(db.Integer, nullable=True)
     time = db.Column(db.DateTime, nullable=False)
     commissionfee = db.Column(db.Float, nullable=False)
 

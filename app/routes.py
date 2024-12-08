@@ -181,8 +181,8 @@ def book_product(listingID):
             commission_fee = float(request.form['commission_fee'])
 
             # Controleer of de geselecteerde periode binnen de beschikbare periode valt
-            available_start = datetime.strptime(available_calendar[0], '%Y-%m-%dT%H:%M')
-            available_end = datetime.strptime(available_calendar[1], '%Y-%m-%dT%H:%M')
+            available_start = datetime.strptime(available_calendar[0][1:], '%Y-%m-%dT%H:%M')
+            available_end = datetime.strptime(available_calendar[1][:-1], '%Y-%m-%dT%H:%M')
             if not (available_start <= start_time < end_time <= available_end):
                 flash("Selected time is not within the available period.", "danger")
                 return redirect(url_for('main.book_product', listingID=listingID))
@@ -201,11 +201,14 @@ def book_product(listingID):
             # Voeg notificatie toe
             notification_message = f"Booking confirmed for {product.name} from {start_time} to {end_time}."
             new_notification = Notification(
-                message=notification_message,
+                type=notification_message,
                 receiverID=session['user_id']
             )
+            print(f"not = {new_notification}", flush=True)
             db.session.add(new_notification)
+            print(f"committing db not", flush=True)
             db.session.commit()
+            print(f"commit done", flush=True)
 
             # Debugging de redirect
             print("Redirecting to booking success page...")
