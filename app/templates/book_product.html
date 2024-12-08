@@ -2,9 +2,6 @@
 <p><strong>Available Period:</strong> From: {{ available_calendar[0] }} To: {{ available_calendar[1] }}</p>
 
 <form method="POST" action="{{ url_for('main.book_product', listingID=product.listingID) }}">
-    <label for="persons_booked">Number of Persons:</label>
-    <input type="number" id="persons_booked" name="persons_booked" value="1" readonly><br> <!-- Vastgezet op 1 -->
-
     <label for="start_time">Start Time:</label>
     <input type="datetime-local" id="start_time" name="start_time" required><br>
 

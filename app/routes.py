@@ -198,6 +198,8 @@ def book_product(listingID):
             )
             db.session.add(new_booking)
 
+            db.session.commit()
+            
             # Voeg notificatie toe
             new_notification = Notification(
                 type=f"Booking confirmed for {product.name} from {start_time} to {end_time}.",
