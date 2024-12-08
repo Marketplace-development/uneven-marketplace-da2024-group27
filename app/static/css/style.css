@@ -1,52 +1,90 @@
 /* Algemeen */
 body {
-    font-family: 'Arial', sans-serif;
+    font-family: 'Roboto', sans-serif;
     margin: 0;
     padding: 0;
-    background-image: url("https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+    background-color: #f4f4f4;
     color: #333;
     line-height: 1.6;
 }
+
+body {
+    background: url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg') no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    line-height: 1.6;
+}
+
 /* Header styling */
 header {
-    background-color: rgba(76, 175, 80, 0.9); /* Transparant groen voor een frisse uitstraling */
-    color: white;
-    text-align: center;
-    padding: 15px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    position: sticky;
+    position: fixed;
     top: 0;
+    width: 100%;
+    background: rgba(76, 175, 80, 0.8); /* Transparant groen voor een moderne uitstraling */
+    color: white;
+    padding: 10px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
 }
 
+/* Logo of titel in de header */
 header h1 {
-    color: white; /* Zorgt ervoor dat de tekst wit is */
+    font-size: 1.8rem;
     margin: 0;
-    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 1px;
 }
 
-header nav {
-    margin-top: 10px;
-}
-
+/* Navigatielinks */
 header nav a {
     color: white;
     text-decoration: none;
     margin: 0 15px;
-    font-weight: bold;
     font-size: 1rem;
-    transition: color 0.3s ease;
+    font-weight: bold;
+    transition: all 0.3s ease-in-out;
+    padding: 8px 12px;
+    border-radius: 5px;
 }
 
 header nav a:hover {
-    color: #c0f9c0;
+    background: white;
+    color: #4CAF50;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
+/* Responsief menu voor kleine schermen */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    header nav {
+        margin-top: 10px;
+        width: 100%;
+        text-align: left;
+    }
+
+    header nav a {
+        display: block;
+        margin: 5px 0;
+    }
+}
+
+/* Hero sectie */
 .hero {
-    height: 80vh;
+    height: 90vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,64 +92,85 @@ header nav a:hover {
     text-align: center;
     color: white;
     padding: 20px;
-    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-    border-radius: 10px;
-    margin: 20px auto;
-    max-width: 90%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    background-color: transparent; /* Geen donkere overlay meer */
+    position: relative;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+                url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg');
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+
 .hero h1 {
-    font-size: 3rem;
+    font-size: 4rem;
+    font-weight: 700;
     margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeInDown 1.5s ease-in-out;
 }
 
 .hero p {
     font-size: 1.5rem;
+    font-weight: 300;
     margin-bottom: 30px;
+    max-width: 600px;
+    animation: fadeInUp 1.5s ease-in-out;
 }
 
 .hero .buttons {
     display: flex;
-    gap: 15px;
+    gap: 20px;
+    animation: fadeIn 2s ease-in-out;
 }
 
 .hero .btn {
-    background-color: #4CAF50;
+    background: linear-gradient(45deg, #4CAF50, #81C784);
     color: white;
     text-decoration: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    padding: 15px 30px;
+    border-radius: 25px;
     font-size: 1.2rem;
     font-weight: bold;
-    margin: 5px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
-    transition: background-color 0.3s ease, transform 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
 .hero .btn:hover {
-    background-color: #45a049;
-    transform: scale(1.05);
+    background: linear-gradient(45deg, #388E3C, #66BB6A);
+    transform: scale(1.1);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Footer styling */
-footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 0.9rem;
-    color: #666;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+/* Animaties */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-footer a {
-    color: #4CAF50;
-    text-decoration: none;
-    font-weight: bold;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-footer a:hover {
-    text-decoration: underline;
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Responsiviteit */
@@ -124,19 +183,14 @@ footer a:hover {
         font-size: 1.2rem;
     }
 
+    .hero .btn {
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
     .hero .buttons {
         flex-direction: column;
         gap: 10px;
-    }
-
-    .hero .btn {
-        width: 100%;
-        text-align: center;
-    }
-
-    header nav a {
-        display: block;
-        margin: 5px 0;
     }
 }
 
