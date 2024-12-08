@@ -11,7 +11,7 @@ class User(db.Model):
 
 class Notification(db.Model):
     __tablename__ = 'Notification'  # Adjusted to match the image
-    notificationID = db.Column(db.Integer, primary_key=True)
+    notificationID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     type = db.Column(db.String(50), nullable=False)
     viewed = db.Column(db.Boolean, default=False, nullable=False)
 

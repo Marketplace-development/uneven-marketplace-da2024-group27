@@ -199,16 +199,12 @@ def book_product(listingID):
             db.session.add(new_booking)
 
             # Voeg notificatie toe
-            notification_message = f"Booking confirmed for {product.name} from {start_time} to {end_time}."
             new_notification = Notification(
-                type=notification_message,
+                type=f"Booking confirmed for {product.name} from {start_time} to {end_time}.",
+                viewed=False,  # Zorg ervoor dat de notificatie standaard niet als gelezen wordt gemarkeerd
                 receiverID=session['user_id']
             )
-            print(f"not = {new_notification}", flush=True)
             db.session.add(new_notification)
-            print(f"committing db not", flush=True)
-            db.session.commit()
-            print(f"commit done", flush=True)
 
             # Debugging de redirect
             print("Redirecting to booking success page...")
