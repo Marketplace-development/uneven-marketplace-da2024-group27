@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>All Listings</title>
+    <title>All Products</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>All Listings</h1>
+    <h1 class="page-header">All Products</h1>
     <div class="container">
         {% for product in listings %}
         <div class="card">

@@ -7,7 +7,7 @@
 
 </head>
 <body class="add-product-container">
-    <h1>Add a New Product</h1>
+    <h1 class="page-header">Add a New Product</h1>
     <form action="/add-product" method="POST">
         <label for="listing_name">Product Name:</label><br>
         <input type="text" id="listing_name" name="listing_name" required><br><br>
@@ -43,6 +43,6 @@
         <button type="submit">Add Product</button>
     </form>
     <br>
-    <a href="/dashboard">Back to Dashboard</a>
+    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
 </body>
 </html>

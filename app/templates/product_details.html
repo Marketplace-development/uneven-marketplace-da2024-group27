@@ -2,63 +2,177 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ product.name }}</title>
+    <style>
+        /* CSS alleen toepassen op de product-details-pagina */
+        .product-details-page {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .product-details-page h1, 
+        .product-details-page h2 {
+            color: #4CAF50;
+        }
+
+        .product-details-page h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .product-details-page h2 {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 5px;
+        }
+
+        .product-details-page p {
+            font-size: 1rem;
+            margin: 10px 0;
+        }
+
+        .product-details-page img {
+            display: block;
+            margin: 20px auto;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .product-details-page ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .product-details-page ul li {
+            background: #eaf7e4;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+        }
+
+        .product-details-page a {
+            display: inline-block;
+            margin: 10px 5px;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-details-page a:hover {
+            background-color: #45a049;
+        }
+
+        .product-details-page .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparante achtergrond */
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .product-details-page .button-container {
+            display: flex;
+            flex-direction: column; /* Zorgt voor verticale uitlijning */
+            position: fixed; /* Blijft op dezelfde plek bij scrollen */
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000; /* Zorgt ervoor dat de knoppen boven andere elementen blijven */
+        }
+
+        .product-details-page .button-container a {
+            margin-bottom: 10px; /* Ruimte tussen knoppen */
+        }
+
+        .product-details-page .bottom-buttons {
+            margin-top: 20px;
+            text-align: center; /* Knoppen gecentreerd onderaan */
+        }
+
+        .product-details-page .bottom-buttons a {
+            margin: 10px 5px; /* Ruimte tussen knoppen */
+        }
+    </style>
 </head>
-<body>
-    <h1>{{ product.name }}</h1>
-    <p>{{ product.description }}</p>
+<body class="product-details-page">
+    <div class="container">
+        <h1>{{ product.name }}</h1>
+        <p>{{ product.description }}</p>
 
-    <!-- Product afbeelding -->
-    {% if product.picture %}
-        <img src="{{ product.picture }}" alt="{{ product.name }}" style="max-width: 300px; max-height: 300px;">
-    {% else %}
-        <p>No image available for this product.</p>
-    {% endif %}
-
-    <h2>Available Period</h2>
-    <p>
-        {% set dates = product.available_calendar[1:-1].split(",") if product.available_calendar %}
-        {% for i in range(0, dates|length, 2) %}
-            From: {{ dates[i].split("T")[0] }} {{ dates[i].split("T")[1] }}<br>
-            {% if i+1 < dates|length %}
-                To: {{ dates[i+1].split("T")[0] }} {{ dates[i+1].split("T")[1] }}<br><br>
-            {% else %}
-                <strong>Error:</strong> End date is missing for this period.<br><br>
-            {% endif %}
-        {% endfor %}
-        {% if not dates %}
-            <strong>No available periods for this product.</strong>
+        <!-- Product afbeelding -->
+        {% if product.picture %}
+            <img src="{{ product.picture }}" alt="{{ product.name }}" style="max-width: 300px; max-height: 300px;">
+        {% else %}
+            <p>No image available for this product.</p>
         {% endif %}
-    </p>
-    
-    <h2>Average Rating</h2>
-    {% if average_score %}
-        <p>Average Score: {{ average_score }}/5</p>
-    {% else %}
-        <p>No ratings yet for this product.</p>
-    {% endif %}
 
-    <h2>Reviews</h2>
-    {% if reviews %}
-        <ul>
-            {% for review in reviews %}
-                <li>
-                    <strong>Rating:</strong> {{ review.score }}/5<br>
-                    {% if review.buyer %}
-                        <strong>Reviewer:</strong> {{ review.buyer.userName }}
-                    {% else %}
-                        <strong>Reviewer:</strong> Anonymous
-                    {% endif %}
-                </li>
+        <h2>Available Period</h2>
+        <p>
+            {% set dates = product.available_calendar[1:-1].split(",") if product.available_calendar %}
+            {% for i in range(0, dates|length, 2) %}
+                From: {{ dates[i].split("T")[0] }} {{ dates[i].split("T")[1] }}<br>
+                {% if i+1 < dates|length %}
+                    To: {{ dates[i+1].split("T")[0] }} {{ dates[i+1].split("T")[1] }}<br><br>
+                {% else %}
+                    <strong>Error:</strong> End date is missing for this period.<br><br>
+                {% endif %}
             {% endfor %}
-        </ul>
-    {% else %}
-        <p>No reviews yet for this product.</p>
-    {% endif %}
+            {% if not dates %}
+                <strong>No available periods for this product.</strong>
+            {% endif %}
+        </p>
+        
+        <h2>Average Rating</h2>
+        {% if average_score %}
+            <p>Average Score: {{ average_score }}/5</p>
+        {% else %}
+            <p>No ratings yet for this product.</p>
+        {% endif %}
 
-    <a href="{{ url_for('main.add_review', BookingID=product.listingID) }}">Add Review</a>
-    <a href="{{ url_for('main.listings') }}">Back to Listings</a>
-    <a href="{{ url_for('main.dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
-    <a href="{{ url_for('main.book_product', listingID=product.listingID) }}" class="btn btn-success">Book Now</a>
+        <h2>Reviews</h2>
+        {% if reviews %}
+            <ul>
+                {% for review in reviews %}
+                    <li>
+                        <strong>Rating:</strong> {{ review.score }}/5<br>
+                        {% if review.buyer %}
+                            <strong>Reviewer:</strong> {{ review.buyer.userName }}
+                        {% else %}
+                            <strong>Reviewer:</strong> Anonymous
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews yet for this product.</p>
+        {% endif %}
+
+        <!-- Knoppen rechts onderaan die altijd zichtbaar blijven -->
+        <div class="button-container">
+            <a href="{{ url_for('main.listings') }}">Back to Listings</a>
+            <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+        </div>
+
+        <!-- Knoppen onderaan zoals origineel -->
+        <div class="bottom-buttons">
+            <a href="{{ url_for('main.add_review', BookingID=product.listingID) }}">Add Review</a>
+            <a href="{{ url_for('main.book_product', listingID=product.listingID) }}">Book Now</a>
+        </div>
+    </div>
 </body>
 </html>

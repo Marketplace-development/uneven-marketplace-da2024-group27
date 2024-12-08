@@ -3,47 +3,196 @@
 <head>
     <meta charset="UTF-8">
     <title>Edit Product</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        /* Algemene stijlen voor de Edit Product pagina */
+        .edit-product-container {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url("https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg"); /* Achtergrondafbeelding */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
 
+        /* Hoofd koptekst voor de pagina */
+        .edit-product-container h1 {
+            font-size: 2rem;
+            color: #ffffff;
+            text-align: center;
+            margin-top: 10px;
+            padding: 15px 20px;
+            background-color: rgba(76, 175, 80, 0.8); /* Semi-transparante groene achtergrond */
+            border: 2px solid rgba(56, 142, 60, 0.9); /* Donkergroene semi-transparante rand */
+            width: 100%;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Formulierstijlen */
+        .edit-product-container form {
+            width: 100%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.9); /* Licht transparant wit */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            margin: 30px auto;
+            box-sizing: border-box;
+        }
+
+        /* Labels voor invoervelden */
+        .edit-product-container form label {
+            display: block;
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .edit-product-container form input[type="text"],
+        .edit-product-container form input[type="number"],
+        .edit-product-container form input[type="datetime-local"],
+        .edit-product-container form select,
+        .edit-product-container form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        /* Textarea specifieke stijlen */
+        .edit-product-container form textarea {
+            resize: vertical;
+        }
+
+        /* Focus-effect voor invoervelden */
+        .edit-product-container form input[type="text"]:focus,
+        .edit-product-container form input[type="number"]:focus,
+        .edit-product-container form input[type="datetime-local"]:focus,
+        .edit-product-container form select:focus,
+        .edit-product-container form textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        /* Subtitel voor kalendersectie */
+        .edit-product-container h2 {
+            color: #4CAF50;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Submitknop */
+        .edit-product-container button[type="submit"] {
+            display: inline-block;
+            padding: 12px 20px;
+            font-size: 1rem;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+
+        .edit-product-container button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        /* Link voor terug naar dashboard */
+        .edit-product-container a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: rgba(76, 175, 80, 0.8); /* Transparante groene kleur */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 30px;
+            text-align: center;
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            z-index: 1000;
+            border: 1px solid rgba(56, 142, 60, 0.9);
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .edit-product-container a:hover {
+            background-color: rgba(56, 142, 60, 0.9);
+            transform: scale(1.05);
+        }
+
+        /* Responsieve stijlen voor kleinere schermen */
+        @media (max-width: 768px) {
+            .edit-product-container form {
+                width: 90%;
+                margin-top: 20px;
+            }
+
+            .edit-product-container h1 {
+                font-size: 1.8rem;
+            }
+
+            .edit-product-container h2 {
+                font-size: 1rem;
+            }
+
+            .edit-product-container button[type="submit"] {
+                padding: 12px 20px;
+            }
+        }
+    </style>
 </head>
 <body class="edit-product-container">
-    <!-- De rest van de HTML blijft hetzelfde -->
-</body>
-
     <!-- Titel bovenaan -->
     <h1>Edit Product</h1>
 
     <!-- Formulier -->
     <form method="POST" action="{{ url_for('main.edit_product', listingID=product.listingID) }}">
         <label for="listing_name">Product Name:</label>
-        <input type="text" id="listing_name" name="listing_name" value="{{ product.name }}" required><br>
+        <input type="text" id="listing_name" name="listing_name" value="{{ product.name }}" required>
 
         <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" cols="50">{{ product.description }}</textarea><br>
+        <textarea id="description" name="description" rows="4" cols="50">{{ product.description }}</textarea>
 
         <label for="picture">Picture URL:</label>
-        <input type="text" id="picture" name="picture" value="{{ product.picture }}"><br>
+        <input type="text" id="picture" name="picture" value="{{ product.picture }}">
 
         <label for="status">Status:</label>
         <select id="status" name="status" required>
             <option value="Active" {% if product.status == "Active" %}selected{% endif %}>Active</option>
             <option value="Inactive" {% if product.status == "Inactive" %}selected{% endif %}>Inactive</option>
-        </select><br>
+        </select>
 
         <!-- Subtitel voor de kalendersectie -->
         <h2>Edit Calendar Slots</h2>
 
         <label for="start_time">Start Time:</label>
-        <input type="datetime-local" id="start_time" name="start_time" value="{{ product.available_calendar[0] if product.available_calendar }}"><br>
+        <input type="datetime-local" id="start_time" name="start_time" value="{{ product.available_calendar[0] if product.available_calendar }}">
 
         <label for="end_time">End Time:</label>
-        <input type="datetime-local" id="end_time" name="end_time" value="{{ product.available_calendar[1] if product.available_calendar }}"><br>
+        <input type="datetime-local" id="end_time" name="end_time" value="{{ product.available_calendar[1] if product.available_calendar }}">
 
         <label for="slot_duration">Slot Duration (minutes):</label>
-        <input type="number" id="slot_duration" name="slot_duration" min="1"><br>
+        <input type="number" id="slot_duration" name="slot_duration" min="1">
 
         <label for="available_calendar">Available Calendar:</label>
-        <input type="text" id="available_calendar" name="available_calendar" value="{{ product.available_calendar | join(', ') }}"><br>
+        <textarea id="available_calendar" name="available_calendar">{{ product.available_calendar | join(', ') }}</textarea>
 
         <button type="submit">Save Changes</button>
     </form>
