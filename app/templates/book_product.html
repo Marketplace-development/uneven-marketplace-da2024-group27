@@ -1,7 +1,19 @@
-<form method="post">
-    Persons Booked: <input type="number" name="persons_booked" required><br>
-    Time: <input type="text" name="time" required><br>
-    Commission Fee: <input type="text" name="commission_fee" required><br>
-    Booked Calendar: <input type="text" name="booked_calendar" required><br>
-    <input type="submit" value="Book Product">
- </form>
+<form method="POST" action="{{ url_for('main.book_product', listingID=product.listingID) }}">
+    <h1>Book Product: {{ product.name }}</h1>
+
+    <label for="persons_booked">Number of persons:</label>
+    <input type="number" id="persons_booked" name="persons_booked" min="1" required><br>
+
+    <label for="time">Select a time slot:</label>
+    <select id="time" name="time" required>
+        {% for slot in available_time_slots %}
+            <option value="{{ slot }}">{{ slot }}</option>
+        {% endfor %}
+    </select><br>
+
+    <label for="commission_fee">Commission Fee:</label>
+    <input type="number" step="0.01" id="commission_fee" name="commission_fee" required><br>
+
+    <button type="submit" class="btn btn-primary">Book Now</button>
+</form>
+<a href="{{ url_for('main.listings') }}">Back to Listings</a>

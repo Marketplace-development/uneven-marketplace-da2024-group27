@@ -158,29 +158,56 @@ def listings():
 # Book Product Route
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
+    # Controleer of de gebruiker is ingelogd
     if 'user_id' not in session:
         flash('You need to log in to book a product', 'warning')
         return redirect(url_for('main.login'))
-    
+
     product = Product.query.get_or_404(listingID)
+
+    # Parse de beschikbare kalender van het product
+    available_time_slots = []
+    if product.available_calendar:
+        # Splits de opgeslagen string in tijdslots
+        available_time_slots = product.available_calendar.split(',')
+
     if request.method == 'POST':
-        persons_booked = int(request.form['persons_booked'])
-        time = request.form['time']
-        commission_fee = float(request.form['commission_fee'])
-        booked_calendar = request.form['booked_calendar']
-        new_booking = Booking(
-            listingID=listingID,
-            buyerID=session['user_id'],
-            personsBooked=persons_booked,
-            time=time,
-            commissionfee=commission_fee,
-            booked_calendar=booked_calendar
-        )
-        db.session.add(new_booking)
-        db.session.commit()
-        flash('Booking successful', 'success')
-        return redirect(url_for('main.dashboard'))
-    return render_template('book_product.html', product=product)
+        try:
+            # Haal gegevens op uit het formulier
+            time = request.form['time']
+            persons_booked = int(request.form['persons_booked'])
+            commission_fee = float(request.form['commission_fee'])
+            booked_calendar = time  # Neem de geselecteerde tijdslot als de geboekte kalender
+
+            # Controleer of het geselecteerde tijdslot geldig is
+            if time not in available_time_slots:
+                flash('Invalid time slot selected.', 'danger')
+                return redirect(url_for('main.book_product', listingID=listingID))
+
+            # Voeg nieuwe booking toe
+            new_booking = Booking(
+                listingID=listingID,
+                buyerID=session['user_id'],
+                personsBooked=persons_booked,
+                time=datetime.strptime(time.split(' ')[0], '%Y-%m-%d'),
+                commissionfee=commission_fee,
+                booked_calendar=booked_calendar
+            )
+            db.session.add(new_booking)
+            db.session.commit()
+
+            flash('Booking successful!', 'success')
+            return redirect(url_for('main.dashboard'))
+
+        except ValueError as e:
+            flash(f"Invalid input: {str(e)}", 'danger')
+            return redirect(url_for('main.book_product', listingID=listingID))
+
+    return render_template(
+        'book_product.html',
+        product=product,
+        available_time_slots=available_time_slots
+    )
 
 # Product Details Route
 @main.route('/product-details/<int:listingID>')
