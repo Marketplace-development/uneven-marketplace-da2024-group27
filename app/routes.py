@@ -228,7 +228,7 @@ def book_product(listingID):
 @main.route('/booking-success')
 def booking_success():
     product_name = request.args.get('product_name', 'Product')
-    return redirect(url_for('main.booking_success', product_name=product_name))
+    return render_template('booking_success.html', product_name=product_name)
 
 # Product Details Route
 @main.route('/product-details/<int:listingID>')
