@@ -177,9 +177,6 @@ def book_product(listingID):
             # Haal gegevens op uit het formulier
             start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
             end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-
-            # Vaste waarden
-            persons_booked = 1  # Aantal personen vast op 1
             commission_fee = 0.25  # Vast bedrag voor commissie
 
             # Controleer of de geboekte tijden binnen de beschikbare periode vallen
@@ -194,7 +191,6 @@ def book_product(listingID):
             new_booking = Booking(
                 listingID=listingID,
                 buyerID=session['user_id'],
-                personsBooked=persons_booked,
                 time=start_time,
                 commissionfee=commission_fee,
                 booked_calendar=booked_calendar
