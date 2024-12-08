@@ -160,41 +160,68 @@ from datetime import datetime
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
+    # Controleer of de gebruiker is ingelogd
     if 'user_id' not in session:
         flash('You need to log in to book a product', 'warning')
         return redirect(url_for('main.login'))
 
     product = Product.query.get_or_404(listingID)
-    available_period = product.available_calendar.split(",")
 
+    # Parse de beschikbare kalender (start en einddatum)
+    available_calendar = []
+    if product.available_calendar:
+        available_calendar = product.available_calendar.split(",")  # Splits op basis van komma
+    
     if request.method == 'POST':
-        start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
-        end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-        available_start = datetime.strptime(available_period[0], '%Y-%m-%dT%H:%M')
-        available_end = datetime.strptime(available_period[1], '%Y-%m-%dT%H:%M')
+        try:
+            # Haal gegevens op uit het formulier
+            start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
+            end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
 
-        # Controleer of de boeking binnen de periode valt
-        if not (available_start <= start_time <= available_end and available_start <= end_time <= available_end):
-            flash('Selected period is not available for booking!', 'danger')
+            # Vaste waarden
+            persons_booked = 1  # Aantal personen vast op 1
+            commission_fee = 0.25  # Vast bedrag voor commissie
+
+            # Controleer of de geboekte tijden binnen de beschikbare periode vallen
+            available_start = datetime.strptime(available_calendar[0], '%Y-%m-%dT%H:%M')
+            available_end = datetime.strptime(available_calendar[1], '%Y-%m-%dT%H:%M')
+            if not (available_start <= start_time < end_time <= available_end):
+                flash('Selected time is not within the available period.', 'danger')
+                return redirect(url_for('main.book_product', listingID=listingID))
+
+            # Voeg nieuwe booking toe
+            booked_calendar = f"{start_time} - {end_time}"
+            new_booking = Booking(
+                listingID=listingID,
+                buyerID=session['user_id'],
+                personsBooked=persons_booked,
+                time=start_time,
+                commissionfee=commission_fee,
+                booked_calendar=booked_calendar
+            )
+            db.session.add(new_booking)
+
+            # Voeg notificatie toe
+            notification_message = f"Booking confirmed for {product.name} from {start_time} to {end_time}."
+            new_notification = Notification(
+                message=notification_message,
+                receiverID=session['user_id']
+            )
+            db.session.add(new_notification)
+            db.session.commit()
+
+            flash(f"{product.name} was successfully booked!", "success")
+            return redirect(url_for('main.dashboard'))
+
+        except ValueError as e:
+            flash(f"Invalid input: {str(e)}", 'danger')
             return redirect(url_for('main.book_product', listingID=listingID))
 
-        # Maak de boeking
-        persons_booked = int(request.form['persons_booked'])
-        commission_fee = float(request.form['commission_fee'])
-        new_booking = Booking(
-            listingID=listingID,
-            buyerID=session['user_id'],
-            personsBooked=persons_booked,
-            time=start_time,
-            commissionfee=commission_fee,
-            booked_calendar=f"{start_time} to {end_time}"
-        )
-        db.session.add(new_booking)
-        db.session.commit()
-        flash(f'{product.name} was successfully booked!', 'success')
-        return redirect(url_for('main.dashboard'))
-    
-    return render_template('book_product.html', product=product)
+    return render_template(
+        'book_product.html',
+        product=product,
+        available_calendar=available_calendar
+    )
 
 # Product Details Route
 @main.route('/product-details/<int:listingID>')

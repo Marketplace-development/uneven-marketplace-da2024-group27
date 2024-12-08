@@ -1,9 +1,9 @@
 <h2>Book Product: {{ product.name }}</h2>
-<p><strong>Available Period:</strong> From {{ product.available_calendar.split(",")[0] }} to {{ product.available_calendar.split(",")[1] }}</p>
+<p><strong>Available Period:</strong> From {{ available_calendar[0] }} to {{ available_calendar[1] }}</p>
 
 <form method="POST" action="{{ url_for('main.book_product', listingID=product.listingID) }}">
-    <label for="persons_booked">Number of persons:</label>
-    <input type="number" id="persons_booked" name="persons_booked" required><br>
+    <label for="persons_booked">Number of Persons:</label>
+    <input type="number" id="persons_booked" name="persons_booked" value="1" readonly><br> <!-- Vastgezet op 1 -->
 
     <label for="start_time">Start Time:</label>
     <input type="datetime-local" id="start_time" name="start_time" required><br>
@@ -12,7 +12,7 @@
     <input type="datetime-local" id="end_time" name="end_time" required><br>
 
     <label for="commission_fee">Commission Fee:</label>
-    <input type="number" id="commission_fee" name="commission_fee" step="0.01" required><br>
+    <input type="number" id="commission_fee" name="commission_fee" value="0.25" readonly><br> <!-- Vastgezet op 0.25 -->
 
     <button type="submit">Book Now</button>
 </form>
