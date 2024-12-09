@@ -8,7 +8,7 @@
 </head>
 <body id="dashboard-page">
     <header class="dashboard-header">
-        <h1>Welcome {{ username if username else 'Guest' }}</h1>
+        <h1>Welcome, {{ username if username else 'Guest' }}</h1>
         {% if username %}
             <a href="{{ url_for('main.logout') }}" class="btn btn-logout">Logout</a>
         {% else %}
