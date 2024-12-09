@@ -141,6 +141,49 @@ header nav a:hover {
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
 }
 
+/* Scroll Down Pijl */
+.scroll-down {
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 2s ease-in-out;
+}
+
+.scroll-down p {
+    font-size: 1.2rem;
+    color: white;
+    margin: 0 0 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.scroll-down .arrow {
+    width: 20px;
+    height: 20px;
+    border-left: 3px solid white;
+    border-bottom: 3px solid white;
+    margin: 0 auto;
+    transform: rotate(-45deg);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0) rotate(-45deg);
+    }
+    50% {
+        transform: translateY(10px) rotate(-45deg);
+    }
+}
+
+/* Fade In Animatie */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 /* About Us Sectie */
 .about-us {
     background-color: #f0f8ff; /* Lichtblauw voor een frisse uitstraling */
