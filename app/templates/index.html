@@ -46,20 +46,11 @@
                 <p class="no-products">No products available. <a href="/add-product" class="btn btn-secondary">Add a New Product</a></p>
             {% endif %}
         </section>
-
-        <div class="bookings">
-            <h3>Bookings</h3>
-            <form action="{{ url_for('main.my_bookings') }}" method="GET">
-                <button type="submit" class="btn btn-primary">Booked Products</button>
-            </form>
-            <form action="{{ url_for('main.booked_by_others') }}" method="GET" style="display: inline;">
-                <button type="submit" class="btn btn-secondary">Booked By Others</button>
-            </form>
-        </div>
         
         <div class="fixed-actions">
             <a href="/listings" class="btn btn-primary">View All Products</a>
             <a href="/add-product" class="btn btn-secondary">Add a New Product</a>
+            <a href="{{ url_for('main.bookings') }}" class="btn btn-primary">Bookings</a>
         </div>
     </main>
     

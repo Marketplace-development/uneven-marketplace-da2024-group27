@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings</title>
+</head>
+<body>
+    <h1>Bookings</h1>
+
+    <!-- My Bookings Section -->
+    <h2>My Bookings</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Booking Time</th>
+                <th>Commission Fee</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking, product in my_bookings %}
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ booking.time }}</td>
+                <td>{{ booking.commissionfee }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Booked By Others Section -->
+    <h2>Booked By Others</h2>
+    <ul>
+        {% for booking, product, user in booked_by_others %}
+        <li>{{ user.userName }} has booked {{ product.name }} from {{ booking.booked_calendar.split(' - ')[0] }} to {{ booking.booked_calendar.split(' - ')[1] }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+</body>
+</html>
+

@@ -369,35 +369,18 @@ def add_review(BookingID):
 
     return render_template('add_review.html', booking=Booking.query.get_or_404(BookingID))
 
-@main.route('/my-bookings')
-def my_bookings():
+@main.route('/bookings')
+def bookings():
     if 'user_id' not in session:
-        flash('You need to log in to view your bookings.', 'warning')
+        flash('You need to log in to view bookings', 'warning')
         return redirect(url_for('main.login'))
 
-    # Haal alle boekingen op van de huidige gebruiker
-    my_bookings = Booking.query.filter_by(buyerID=session['user_id']).all()
+    user_id = session['user_id']
 
-    return render_template('my_bookings.html', bookings=my_bookings)
+    # My Bookings: Haal boekingen op die door de gebruiker zijn gemaakt
+    my_bookings = db.session.query(Booking, Product).join(Product, Product.listingID == Booking.listingID).filter(Booking.buyerID == user_id).all()
 
-@main.route('/booked-by-others', methods=['GET'])
-def booked_by_others():
-    if 'user_id' not in session:
-        flash('You need to log in to view bookings for your products', 'warning')
-        return redirect(url_for('main.login'))
+    # Booked By Others: Haal boekingen op van producten die door de gebruiker worden aangeboden
+    booked_by_others = db.session.query(Booking, Product, User).join(Product, Product.listingID == Booking.listingID).join(User, User.userID == Booking.buyerID).filter(Product.providerID == user_id).all()
 
-    # Haal alle producten van de ingelogde gebruiker op
-    user_products = Product.query.filter_by(providerID=session['user_id']).all()
-    user_product_ids = [product.listingID for product in user_products]
-
-    # Haal boekingen op en voeg gebruikers- en productinformatie toe
-    bookings = db.session.query(
-        Booking,
-        User.userName.label('user_name'),
-        Product.name.label('product_name')
-    ).join(User, Booking.buyerID == User.userID) \
-     .join(Product, Booking.listingID == Product.listingID) \
-     .filter(Booking.listingID.in_(user_product_ids)) \
-     .all()
-
-    return render_template('booked_by_others.html', bookings=bookings)
+    return render_template('bookings.html', my_bookings=my_bookings, booked_by_others=booked_by_others)
