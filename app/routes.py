@@ -337,15 +337,15 @@ def delete_product(listingID):
     flash('Product deleted successfully!', 'success')
     return redirect(url_for('main.dashboard'))
 
-@main.route('/booking/<int:BookingID>/add_review', methods=['GET', 'POST'])
-def add_review(BookingID):
-    # Controleer of de boeking bestaat
-    booking = Booking.query.get_or_404(BookingID)
+@main.route('/product/<int:listingID>/add_review', methods=['GET', 'POST'])
+def add_review(listingID):
+    # Controleer of de gebruiker is ingelogd
+    if 'user_id' not in session:
+        flash("You need to log in to add a review.", "warning")
+        return redirect(url_for('main.login'))
 
-    # Controleer of de gebruiker de eigenaar van de boeking is
-    if booking.buyerID != session.get('user_id'):
-        flash("You are not authorized to review this booking.", "danger")
-        return redirect(url_for('main.dashboard'))
+    # Controleer of het product bestaat
+    product = Product.query.get_or_404(listingID)
 
     if request.method == 'POST':
         try:
@@ -353,26 +353,26 @@ def add_review(BookingID):
             score = int(request.form.get('score'))
 
             # Validatie
-            if score < 1 or score > 5:
+            if not (1 <= score <= 5):
                 flash("Please provide a valid score between 1 and 5.", "danger")
-                return render_template('add_review.html', booking=booking)
+                return render_template('add_review.html', product=product)
 
             # Voeg de review toe
             review = Review(
                 score=score,
                 buyerID=session.get('user_id'),
-                BookingID=booking.BookingID
+                listingID=product.listingID
             )
             db.session.add(review)
             db.session.commit()
-            flash("Review added successfully!", "success")
-            return redirect(url_for('main.product_details', listingID=booking.listingID))
+            flash(f"Review for {product.name} added successfully!", "success")
+            return redirect(url_for('main.product_details', listingID=product.listingID))
         except ValueError:
-            flash("Invalid input. Please enter a number between 1 and 5.", "danger")
-            return render_template('add_review.html', booking=booking)
+            flash("Invalid input. Please enter a valid score between 1 and 5.", "danger")
+            return render_template('add_review.html', product=product)
 
     # Render de `add_review.html` template als het een GET-verzoek is
-    return render_template('add_review.html', booking=booking)
+    return render_template('add_review.html', product=product)
 
 @main.route('/bookings')
 def bookings():

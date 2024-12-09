@@ -52,8 +52,9 @@ class Booking(db.Model):
 
 class Review(db.Model):
     __tablename__ = 'Review'  # Adjusted to match the image
-    reviewID = db.Column(db.Integer, primary_key=True)
+    reviewID = db.Column(db.Integer, primary_key=True, autoincrement=True)
     score = db.Column(db.Integer, nullable=False)
+    listingID = db.Column(db.Integer, db.ForeignKey('listing.id'), nullable=False) 
 
     # Foreign Keys
     buyerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)

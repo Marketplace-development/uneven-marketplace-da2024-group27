@@ -164,7 +164,7 @@
 
         <!-- Knoppen onderaan zoals origineel -->
         <div class="bottom-buttons">
-            <a href="{{ url_for('main.add_review', BookingID=product.listingID) }}">Add Review</a>
+            <a href="{{ url_for('main.add_review', listingID=product.listingID) }}">Add Review</a>
             <a href="{{ url_for('main.book_product', listingID=product.listingID) }}">Book Now</a>
         </div>
     </div>
