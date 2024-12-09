@@ -6,9 +6,9 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body id="dashboard-page">
     <header class="dashboard-header">
-        <h1>Welcome {{ username if username else 'Guest' }}</h1>
+        <h1>Welcome, {{ username if username else 'Guest' }}</h1>
         {% if username %}
             <a href="{{ url_for('main.logout') }}" class="btn btn-logout">Logout</a>
         {% else %}
@@ -24,9 +24,11 @@
                 <ul class="product-list">
                     {% for listing in listings %}
                         <li class="product-item">
-                            <strong>{{ listing.name }}</strong><br>
-                            <p>{{ listing.description }}</p>
-                            <p><strong>Status:</strong> {{ listing.status }}</p>
+                            <div class="product-info">
+                                <strong>{{ listing.name }}</strong><br>
+                                <p>{{ listing.description }}</p>
+                                <p><strong>Status:</strong> {{ listing.status }}</p>
+                            </div>
                             {% if listing.picture %}
                                 <img src="{{ listing.picture }}" alt="{{ listing.name }}" class="product-image">
                             {% endif %}
@@ -41,7 +43,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No products available.</p>
+                <p class="no-products">No products available. <a href="/add-product" class="btn btn-secondary">Add a New Product</a></p>
             {% endif %}
         </section>
 
@@ -56,7 +58,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No notifications.</p>
+                <p class="no-notifications">No notifications at the moment.</p>
             {% endif %}
         </section>
 
@@ -67,7 +69,7 @@
     </main>
     
     <footer class="dashboard-footer">
-        <p>&copy; 2024 GardenLend</p>
+        <p>&copy; 2024 GardenLend. All Rights Reserved.</p>
     </footer>
 </body>
 </html>

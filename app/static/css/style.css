@@ -217,146 +217,196 @@ a {
     text-decoration: none;
 }
 
+/* Algemene styling voor dashboard */
+#dashboard-page {
+    background: url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg') no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
 /* Header styling */
-.dashboard-header {
-    background-color: rgba(76, 175, 80, 0.9); /* Transparant groen voor een frisse uitstraling */
+#dashboard-page .dashboard-header {
+    background: rgba(76, 175, 80, 0.9);
+    color: white;
+    padding: 10px 0; /* Minder padding zorgt voor een dunnere balk */
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+#dashboard-page .dashboard-header h1 {
+    font-size: 2rem; /* Iets kleinere tekst */
+    font-weight: bold;
+    margin: 0;
+    padding-left: 10px; /* Verplaatst de tekst naar rechts (10px = ongeveer halve centimeter) */
+    text-align: left; /* Zorgt ervoor dat de tekst niet volledig gecentreerd blijft */
+}
+
+#dashboard-page .dashboard-header a {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 8px 12px; /* Knoppen iets kleiner gemaakt om aan te passen aan de dunnere header */
+    font-size: 1rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin: 10px;
+}
+
+#dashboard-page .dashboard-header a:hover {
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: scale(1.1);
+}
+
+/* Product sectie */
+#dashboard-page .products-section {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 30px auto;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+}
+#dashboard-page .product-item {
+    display: flex;
+    justify-content: space-between; /* Zorgt voor ruimte tussen productinformatie en acties */
+    align-items: center; /* Centreert de inhoud verticaal */
+    background: linear-gradient(135deg, #ffffff, #f9f9f9);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+#dashboard-page .product-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+#dashboard-page .product-image-container {
+    flex: 0 0 300px; /* Vergroot de breedte van de container */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Positioneert de afbeelding meer naar links */
+    margin-right: 20px; /* Zorgt voor ruimte tussen de afbeelding en de rest */
+}
+
+#dashboard-page .product-image {
+    width: 270px; /* Maakt de afbeelding 50% breder */
+    height: 180px; /* Past de hoogte aan zodat de afbeelding niet vervormt */
+    border-radius: 10px;
+    object-fit: cover; /* Zorgt dat de afbeelding netjes blijft binnen de container */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#dashboard-page .product-info {
+    flex: 2;
+    padding-left: 20px; /* Voegt wat ruimte toe tussen de afbeelding en de tekst */
+}
+
+#dashboard-page .product-actions {
+    display: flex;
+    flex-direction: column; /* Zet de knoppen onder elkaar */
+    gap: 10px; /* Ruimte tussen de knoppen */
+    align-items: flex-end; /* Positioneert de knoppen aan de rechterkant */
+    justify-content: center; /* Centreert de knoppen verticaal in de container */
+    flex: none;
+    margin-left: 20px; /* Voegt extra ruimte toe tussen de afbeelding en de knoppen */
+}
+/* Knoppen styling */
+#dashboard-page .btn {
+    padding: 10px 15px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#dashboard-page .btn-details {
+    background-color: #4CAF50; /* Groen voor More Details */
+    color: white;
+}
+
+#dashboard-page .btn-edit {
+    background-color: #FFC107;
+    color: white;
+}
+
+#dashboard-page .btn-delete {
+    background-color: #F44336;
+    color: white;
+    border: none; /* Verwijdert de rand */
+    outline: none; /* Verwijdert de zwarte focuslijn */
+}
+
+#dashboard-page .btn-delete:hover {
+    background-color: #E53935;
+    transform: scale(1.05);
+}
+
+#dashboard-page .btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Notifications sectie */
+#dashboard-page .notifications-section {
+    background: rgba(255, 255, 255, 0.9);
+    margin: 30px auto;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+}
+
+/* Footer styling */
+#dashboard-page .dashboard-footer {
+    background: rgba(76, 175, 80, 0.9);
     color: white;
     text-align: center;
-    position: relative;
     padding: 15px 0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 1rem;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.dashboard-header a {
-    color: white;
-    margin-left: 20px;
-    font-weight: bold;
-    transition: color 0.3s ease;
-}
-
-.dashboard-header a:hover {
-    color: #c0f9c0;
-}
-
-/* Product lijst styling */
-.products-section, .notifications-section {
-    background: white;
-    margin: 20px auto;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-}
-
-.product-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.product-item {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
-    background-color: #fafafa;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.product-image {
-    width: 150px; /* Breedte van het kader */
-    height: 150px; /* Hoogte van het kader */
-    object-fit: cover; 
-    border-radius: 5px;
-    margin: 10px 0;
-}
-
-.product-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.notification-list {
-    padding-left: 15px;
-}
-
-.fixed-actions {
+/* Stijl voor de fixed-action knoppen */
+#dashboard-page .fixed-actions {
     position: fixed;
     bottom: 20px;
     right: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    z-index: 9999; /* Zorg ervoor dat ze altijd zichtbaar zijn boven andere elementen */
+    z-index: 1000;
 }
 
-.fixed-actions .btn {
-    width: auto; /* Zorg ervoor dat de breedte van de knoppen flexibel blijft */
-}
-
-/* Knoppen styling */
-.btn {
-    display: inline-block;
-    padding: 10px 15px;
+#dashboard-page .fixed-actions .btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 20px;
     font-size: 1rem;
     font-weight: bold;
     text-align: center;
     border-radius: 5px;
-    border: none;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: transform 0.2s ease, background-color 0.3s ease;
 }
 
-.btn-primary {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.btn-secondary {
+#dashboard-page .fixed-actions .btn:hover {
     background-color: #45a049;
-    color: white;
-}
-
-.btn-details {
-    background-color: #4CAF50;
-    color: white;
-}
-
-.btn-edit {
-    background-color: #FFC107;
-    color: black;
-}
-
-.btn-delete {
-    background-color: #F44336;
-    color: white;
-}
-
-.btn:hover {
     transform: scale(1.05);
 }
 
-.btn-primary:hover {
-    background-color: #45a049;
-}
-
-.btn-secondary:hover {
-    background-color: #45a049;
-}
-
-.btn-delete:hover {
-    background-color: #e53935;
-}
-
-/* Footer styling */
-.dashboard-footer {
-    text-align: center;
-    padding: 10px;
-    font-size: 0.9rem;
-    background-color: #4CAF50;
-    color: white;
-    margin-top: 20px;
-}
 
 /* Loginpagina styling */
 .login-container {
