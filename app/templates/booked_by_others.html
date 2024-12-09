@@ -8,9 +8,9 @@
 <body>
     <h1>Booked By Others</h1>
     <ul>
-        {% for booking in bookings %}
+        {% for booking, user_name, product_name in bookings %}
             <li>
-                Product: {{ booking.listingID }} - Booked By User ID: {{ booking.buyerID }} - Date: {{ booking.time.strftime('%Y-%m-%d %H:%M') }}
+                {{ user_name }} has booked {{ product_name }} from {{ booking.booked_calendar.split(' - ')[0] }} to {{ booking.booked_calendar.split(' - ')[1] }}
             </li>
         {% endfor %}
     </ul>

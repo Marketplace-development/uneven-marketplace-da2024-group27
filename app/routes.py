@@ -390,8 +390,14 @@ def booked_by_others():
     user_products = Product.query.filter_by(providerID=session['user_id']).all()
     user_product_ids = [product.listingID for product in user_products]
 
-    # Haal boekingen op die betrekking hebben op de producten van de gebruiker
-    bookings = Booking.query.filter(Booking.listingID.in_(user_product_ids)).all()
+    # Haal boekingen op en voeg gebruikers- en productinformatie toe
+    bookings = db.session.query(
+        Booking,
+        User.userName.label('user_name'),
+        Product.name.label('product_name')
+    ).join(User, Booking.buyerID == User.userID) \
+     .join(Product, Booking.listingID == Product.listingID) \
+     .filter(Booking.listingID.in_(user_product_ids)) \
+     .all()
 
     return render_template('booked_by_others.html', bookings=bookings)
-
