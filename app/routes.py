@@ -235,16 +235,15 @@ def booking_success():
 # Product Details Route
 @main.route('/product-details/<int:listingID>')
 def product_details(listingID):
-    product = Product.query.filter_by(listingID=listingID).first_or_404()
+    product = Product.query.get_or_404(listingID)
 
-    # Haal alle boekingen op
+    # Haal alle boekingen op die bij dit product horen
     bookings = Booking.query.filter_by(listingID=listingID).all()
 
-    # Haal alle reviews op en controleer op geldige buyers
+    # Haal reviews op van die boekingen
     reviews = Review.query.join(Booking).filter(Booking.listingID == listingID).all()
-    valid_reviews = [review for review in reviews if review.buyer]
 
-    # Bereken de gemiddelde score
+    # Bereken gemiddelde score
     average_score = (
         db.session.query(db.func.avg(Review.score))
         .join(Booking)
@@ -255,7 +254,7 @@ def product_details(listingID):
     return render_template(
         'product_details.html',
         product=product,
-        reviews=valid_reviews,
+        reviews=reviews,
         average_score=round(average_score, 2) if average_score else None
     )
 
@@ -349,25 +348,31 @@ def add_review(BookingID):
         return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
-        score = request.form.get('score')
+        try:
+            # Haal de score op uit het formulier
+            score = int(request.form.get('score'))
 
-        # Validatie
-        if not score or int(score) < 1 or int(score) > 5:
-            flash("Please provide a valid score between 1 and 5.", "danger")
-            return redirect(url_for('main.add_review', BookingID=BookingID))
+            # Validatie
+            if score < 1 or score > 5:
+                flash("Please provide a valid score between 1 and 5.", "danger")
+                return render_template('add_review.html', booking=booking)
 
-        # Voeg de review toe
-        review = Review(
-            score=int(score),
-            buyerID=session.get('user_id'),
-            BookingID=booking.BookingID
-        )
-        db.session.add(review)
-        db.session.commit()
-        flash("Review added successfully!", "success")
-        return redirect(url_for('main.dashboard'))
+            # Voeg de review toe
+            review = Review(
+                score=score,
+                buyerID=session.get('user_id'),
+                BookingID=booking.BookingID
+            )
+            db.session.add(review)
+            db.session.commit()
+            flash("Review added successfully!", "success")
+            return redirect(url_for('main.product_details', listingID=booking.listingID))
+        except ValueError:
+            flash("Invalid input. Please enter a number between 1 and 5.", "danger")
+            return render_template('add_review.html', booking=booking)
 
-    return render_template('add_review.html', booking=Booking.query.get_or_404(BookingID))
+    # Render de `add_review.html` template als het een GET-verzoek is
+    return render_template('add_review.html', booking=booking)
 
 @main.route('/bookings')
 def bookings():

@@ -144,24 +144,18 @@
             <p>No ratings yet for this product.</p>
         {% endif %}
 
-        <h2>Reviews</h2>
+        <h4>Reviews</h4>
         {% if reviews %}
-            <ul>
-                {% for review in reviews %}
-                    <li>
-                        <strong>Rating:</strong> {{ review.score }}/5<br>
-                        {% if review.buyer %}
-                            <strong>Reviewer:</strong> {{ review.buyer.userName }}
-                        {% else %}
-                            <strong>Reviewer:</strong> Anonymous
-                        {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
+            {% for review in reviews %}
+                <div class="review">
+                    <p><strong>Rating:</strong> {{ review.score }}/5</p>
+                    <p><strong>Reviewer:</strong> {{ review.buyer.userName }}</p>
+                </div>
+            {% endfor %}
         {% else %}
             <p>No reviews yet for this product.</p>
         {% endif %}
-
+        
         <!-- Knoppen rechts onderaan die altijd zichtbaar blijven -->
         <div class="button-container">
             <a href="{{ url_for('main.listings') }}">View All Products</a>
