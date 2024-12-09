@@ -52,6 +52,9 @@
             <form action="{{ url_for('main.my_bookings') }}" method="GET">
                 <button type="submit" class="btn btn-primary">Booked Products</button>
             </form>
+            <form action="{{ url_for('main.booked_by_others') }}" method="GET" style="display: inline;">
+                <button type="submit" class="btn btn-secondary">Booked By Others</button>
+            </form>
         </div>
         
         <div class="fixed-actions">

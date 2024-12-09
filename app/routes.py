@@ -379,3 +379,19 @@ def my_bookings():
     my_bookings = Booking.query.filter_by(buyerID=session['user_id']).all()
 
     return render_template('my_bookings.html', bookings=my_bookings)
+
+@main.route('/booked-by-others', methods=['GET'])
+def booked_by_others():
+    if 'user_id' not in session:
+        flash('You need to log in to view bookings for your products', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Haal alle producten van de ingelogde gebruiker op
+    user_products = Product.query.filter_by(providerID=session['user_id']).all()
+    user_product_ids = [product.listingID for product in user_products]
+
+    # Haal boekingen op die betrekking hebben op de producten van de gebruiker
+    bookings = Booking.query.filter(Booking.listingID.in_(user_product_ids)).all()
+
+    return render_template('booked_by_others.html', bookings=bookings)
+

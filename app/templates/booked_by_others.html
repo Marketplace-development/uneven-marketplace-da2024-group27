@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booked By Others</title>
+</head>
+<body>
+    <h1>Booked By Others</h1>
+    <ul>
+        {% for booking in bookings %}
+            <li>
+                Product: {{ booking.listingID }} - Booked By User ID: {{ booking.buyerID }} - Date: {{ booking.time.strftime('%Y-%m-%d %H:%M') }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
