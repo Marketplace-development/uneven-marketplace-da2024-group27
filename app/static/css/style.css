@@ -440,7 +440,7 @@ a {
 .login-form input[type="text"],
 .login-form input[type="email"],
 .login-form input[type="password"] {
-    width: 80%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
@@ -544,7 +544,7 @@ footer {
 .register-form input[type="text"],
 .register-form input[type="email"],
 .register-form input[type="password"] {
-    width: 80%;
+    width: 95%;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;

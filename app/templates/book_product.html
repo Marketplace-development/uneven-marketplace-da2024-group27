@@ -133,7 +133,7 @@
             <label for="end_time">End Time:</label>
             <input type="datetime-local" id="end_time" name="end_time" required>
 
-            <label for="commission_fee">Commission Fee:</label>
+            <label for="commission_fee">Community Donation:</label>
             <input type="text" id="commission_fee" name="commission_fee" value="0.25" readonly>
 
             <button type="submit">Book Now</button>
@@ -144,8 +144,8 @@
 
     <!-- Knoppen rechts onderaan -->
     <div class="button-container">
-        <a href="{{ url_for('main.listings') }}">Back to Listings</a>
-        <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+        <a href="{{ url_for('main.listings') }}">View All Products</a>
+        <a href="{{ url_for('main.dashboard') }}">Back To Profile</a>
     </div>
 </body>
 </html>
