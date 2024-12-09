@@ -47,6 +47,7 @@ class Booking(db.Model):
 
     # Additional Field
     booked_calendar = db.Column(db.Text, nullable=False)
+    product = db.relationship('Product', backref='bookings')
 
 
 class Review(db.Model):

@@ -368,3 +368,14 @@ def add_review(BookingID):
         return redirect(url_for('main.dashboard'))
 
     return render_template('add_review.html', booking=Booking.query.get_or_404(BookingID))
+
+@main.route('/my-bookings')
+def my_bookings():
+    if 'user_id' not in session:
+        flash('You need to log in to view your bookings.', 'warning')
+        return redirect(url_for('main.login'))
+
+    # Haal alle boekingen op van de huidige gebruiker
+    my_bookings = Booking.query.filter_by(buyerID=session['user_id']).all()
+
+    return render_template('my_bookings.html', bookings=my_bookings)
