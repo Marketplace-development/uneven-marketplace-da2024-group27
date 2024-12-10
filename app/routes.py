@@ -9,12 +9,12 @@ import os
 main = Blueprint('main', __name__)
 
 # Hulpfuncties
-def generate_timeslots(start_time, end_time, slot_duration):
+def generate_timeslots(start_time, end_time):
     current_time = start_time
     slots = []
     while current_time < end_time:
         slot_start = current_time
-        slot_end = current_time + slot_duration
+        slot_end = current_time
         slots.append((slot_start, slot_end))
         current_time = slot_end
     return slots
@@ -109,7 +109,6 @@ def add_product():
 
         # Validatie van tijdgerelateerde invoer
         try:
-            slot_duration = int(request.form['slot_duration'])  # Zorg dat het een int is
             start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
             end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
         except ValueError:
@@ -117,7 +116,7 @@ def add_product():
             return redirect(url_for('main.add_product'))
 
         # Tijdslots genereren
-        timeslots = generate_timeslots(start_time, end_time, timedelta(minutes=slot_duration))
+        timeslots = generate_timeslots(start_time, end_time)
 
         # iCalendar-bestand aanmaken
         filename = f"{name}_timeslots.ics"
@@ -292,7 +291,6 @@ def edit_product(listingID):
         try:
             start_time = request.form['start_time']
             end_time = request.form['end_time']
-            slot_duration = int(request.form['slot_duration'])
 
             # Valideer tijd
             start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
@@ -302,7 +300,7 @@ def edit_product(listingID):
                 return redirect(url_for('main.edit_product', listingID=listingID))
 
             # Genereer tijdslots
-            timeslots = generate_timeslots(start_time_dt, end_time_dt, timedelta(minutes=slot_duration))
+            timeslots = generate_timeslots(start_time_dt, end_time_dt)
 
             # Optioneel: Maak een iCalendar-bestand
             filename = f"{product.name}_timeslots.ics"
