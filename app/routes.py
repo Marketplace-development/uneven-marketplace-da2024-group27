@@ -2,6 +2,7 @@ from flask import Blueprint, request, redirect, url_for, render_template, sessio
 from datetime import datetime, timedelta
 from .models import db, User, Product, Booking, Review, Notification
 from .utils import generate_timeslots, create_ical
+from sqlalchemy.sql import func
 import os 
 
 # Blueprint aanmaken
@@ -233,27 +234,36 @@ def booking_success():
     return render_template('booking_success.html', product_name=product_name)
 
 # Product Details Route
+
 @main.route('/product-details/<int:listingID>')
 def product_details(listingID):
+    # Haal het product op, of retourneer 404 als het niet bestaat
     product = Product.query.get_or_404(listingID)
 
     # Haal alle boekingen op die bij dit product horen
     bookings = Booking.query.filter_by(listingID=listingID).all()
 
-    # Haal reviews op van die boekingen
-    reviews = Review.query.join(Booking).filter(Booking.listingID == listingID).all()
+    # Haal reviews op die gerelateerd zijn aan dit product via boekingen
+    reviews = (
+        Review.query
+        .join(Booking, Review.BookingID == Booking.BookingID)
+        .filter(Booking.listingID == listingID)
+        .all()
+    )
 
-    # Bereken gemiddelde score
+    # Bereken de gemiddelde score van de reviews (indien beschikbaar)
     average_score = (
-        db.session.query(db.func.avg(Review.score))
-        .join(Booking)
+        db.session.query(func.avg(Review.score))
+        .join(Booking, Review.BookingID == Booking.BookingID)
         .filter(Booking.listingID == listingID)
         .scalar()
     )
 
+    # Render de 'product_details.html' template met de relevante gegevens
     return render_template(
         'product_details.html',
         product=product,
+        bookings=bookings,
         reviews=reviews,
         average_score=round(average_score, 2) if average_score else None
     )
@@ -348,16 +358,22 @@ def add_review(BookingID):
         return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
+        # Probeer het ophalen en valideren van de score
         try:
             # Haal de score op uit het formulier
             score = int(request.form.get('score'))
 
-            # Validatie
-            if score < 1 or score > 5:
-                flash("Please provide a valid score between 1 and 5.", "danger")
-                return render_template('add_review.html', booking=booking)
+            # Score validatie (moet tussen 1 en 5 zijn)
+            if not (1 <= score <= 5):
+                raise ValueError("Score must be between 1 and 5.")
 
-            # Voeg de review toe
+            # Controleer of er al een review bestaat voor deze boeking
+            existing_review = Review.query.filter_by(BookingID=booking.BookingID).first()
+            if existing_review:
+                flash("A review already exists for this booking.", "warning")
+                return redirect(url_for('main.product_details', listingID=booking.listingID))
+
+            # Voeg de review toe aan de database
             review = Review(
                 score=score,
                 buyerID=session.get('user_id'),
@@ -365,14 +381,22 @@ def add_review(BookingID):
             )
             db.session.add(review)
             db.session.commit()
+
+            # Succesbericht en redirect
             flash("Review added successfully!", "success")
             return redirect(url_for('main.product_details', listingID=booking.listingID))
-        except ValueError:
-            flash("Invalid input. Please enter a number between 1 and 5.", "danger")
+        except ValueError as e:
+            # Foutmelding bij ongeldige invoer
+            flash(str(e), "danger")
+            return render_template('add_review.html', booking=booking)
+        except Exception as e:
+            # Algemene foutafhandeling
+            flash("An unexpected error occurred. Please try again.", "danger")
             return render_template('add_review.html', booking=booking)
 
-    # Render de `add_review.html` template als het een GET-verzoek is
+    # Render de `add_review.html` template voor GET-verzoeken
     return render_template('add_review.html', booking=booking)
+
 
 @main.route('/bookings')
 def bookings():

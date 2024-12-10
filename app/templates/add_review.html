@@ -7,8 +7,8 @@
 <body>
     <h1>Add a Review for Booking #{{ booking.BookingID }}</h1>
     <form action="" method="POST">
-        <label for="score">Score (1-5):</label>
-        <input type="number" id="score" name="score" min="1" max="5" required>
+        <label for="score">Rate your experience (1-5):</label>
+        <input type="number" id="score" name="score" min="1" max="5" required placeholder="Enter a score from 1 to 5">
         <button type="submit">Submit Review</button>
     </form>
     <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
