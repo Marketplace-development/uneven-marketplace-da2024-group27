@@ -389,3 +389,30 @@ def bookings():
     booked_by_others = db.session.query(Booking, Product, User).join(Product, Product.listingID == Booking.listingID).join(User, User.userID == Booking.buyerID).filter(Product.providerID == user_id).all()
 
     return render_template('bookings.html', my_bookings=my_bookings, booked_by_others=booked_by_others)
+
+@main.route('/booking/<int:BookingID>/delete', methods=['POST'])
+def delete_booking(BookingID):
+    if 'user_id' not in session:
+        flash('You need to log in to perform this action', 'warning')
+        return redirect(url_for('main.login'))
+
+    user_id = session['user_id']
+
+    # Haal de boeking op via BookingID
+    booking = Booking.query.get_or_404(BookingID)
+
+    # Controleer of de gebruiker eigenaar is van de boeking
+    if booking.buyerID != user_id:
+        flash('You are not authorized to delete this booking.', 'danger')
+        return redirect(url_for('main.bookings'))
+
+    try:
+        # Verwijder de boeking
+        db.session.delete(booking)
+        db.session.commit()
+        flash('Booking successfully deleted.', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while deleting the booking.', 'danger')
+
+    return redirect(url_for('main.bookings'))
