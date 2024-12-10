@@ -398,7 +398,7 @@ def delete_booking(BookingID):
 
     user_id = session['user_id']
 
-    # Haal de boeking op via BookingID
+    # Haal de boeking op
     booking = Booking.query.get_or_404(BookingID)
 
     # Controleer of de gebruiker eigenaar is van de boeking
@@ -407,12 +407,15 @@ def delete_booking(BookingID):
         return redirect(url_for('main.bookings'))
 
     try:
+        # Verwijder eerst gerelateerde reviews
+        Review.query.filter_by(BookingID=BookingID).delete()
+
         # Verwijder de boeking
         db.session.delete(booking)
         db.session.commit()
         flash('Booking successfully deleted.', 'success')
     except Exception as e:
         db.session.rollback()
-        flash('An error occurred while deleting the booking.', 'danger')
+        flash(f'An error occurred: {e}', 'danger')
 
     return redirect(url_for('main.bookings'))
