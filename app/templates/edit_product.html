@@ -188,6 +188,9 @@
         <label for="end_time">End Time:</label>
         <input type="datetime-local" id="end_time" name="end_time" value="{{ product.available_calendar[1] if product.available_calendar }}">
 
+        <label for="slot_duration">Slot Duration (minutes):</label>
+        <input type="number" id="slot_duration" name="slot_duration" min="1">
+
         <label for="available_calendar">Available Calendar:</label>
         <textarea id="available_calendar" name="available_calendar">{{ product.available_calendar | join(', ') }}</textarea>
 
