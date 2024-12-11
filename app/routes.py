@@ -153,8 +153,19 @@ def add_product():
 # View All Listings Route
 @main.route('/listings')
 def listings():
-    all_products = Product.query.all()
-    return render_template('listings.html', listings=all_products)
+    # Haal de sorteeroptie uit de queryparameters (default: 'name_asc')
+    sort_option = request.args.get('sort', 'name_asc')
+
+    # Sorteer op basis van de naam
+    if sort_option == 'name_asc':
+        all_products = Product.query.order_by(Product.name.asc()).all()  # Sort by name A-Z
+    elif sort_option == 'name_desc':
+        all_products = Product.query.order_by(Product.name.desc()).all()  # Sort by name Z-A
+    else:
+        # Fallback to name_asc if sort_option is invalid
+        all_products = Product.query.order_by(Product.name.asc()).all()
+
+    return render_template('listings.html', listings=all_products, sort_option=sort_option)
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
