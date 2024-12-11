@@ -124,6 +124,7 @@
     <div class="container">
         <h1>Book Product: {{ product.name }}</h1>
         <p><strong>Available Period:</strong> From: {{ available_calendar[0] }} To: {{ available_calendar[1] }}</p>
+        <p><strong>Note:</strong> For safety reasons, a product can be booked for a maximum of 5 days.</p>
 
         <!-- Formulier voor boeken -->
         <form method="POST" action="{{ url_for('main.book_product', listingID=product.listingID) }}">
