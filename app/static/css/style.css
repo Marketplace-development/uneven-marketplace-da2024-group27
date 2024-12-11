@@ -407,7 +407,7 @@ a {
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
+    max-width: 1200px;
 }
 #dashboard-page .product-item {
     display: flex;
@@ -427,7 +427,7 @@ a {
 }
 
 #dashboard-page .product-image-container {
-    flex: 0 0 300px; /* Vergroot de breedte van de container */
+    flex: 0 0 350px; /* Vergroot de breedte van de container */
     display: flex;
     align-items: center;
     justify-content: flex-start; /* Positioneert de afbeelding meer naar links */
@@ -547,7 +547,7 @@ a {
 
 /* Loginpagina styling */
 .login-container {
-    max-width: 400px;
+    max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.9);
@@ -651,7 +651,7 @@ footer {
 
 /* Registrerenpagina styling */
 .register-container {
-    max-width: 400px;
+    max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.9);
@@ -1065,102 +1065,5 @@ h1 {
 
 
 
-
-
-/* Algemene stijlen */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: Arial, sans-serif;
-    background-image: url("https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg");
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* Header */
-.page-header {
-    font-size: 2rem;
-    color: #ffffff;
-    text-align: center;
-    margin-top: 20px;
-    padding: 15px;
-    background-color: rgba(76, 175, 80, 0.9);
-    width: 100%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Formuliercontainer */
-.form-container {
-    width: 100%;
-    max-width: 600px;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
-    margin: 20px auto;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-}
-
-/* Formuliergroepen */
-.form-group {
-    margin-bottom: 15px;
-}
-
-/* Labels */
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #555;
-}
-
-/* Invoervelden */
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-/* Knop */
-button[type="submit"] {
-    width: 100%;
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    font-size: 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button[type="submit"]:hover {
-    background-color: #45a049;
-}
-
-/* Back to Dashboard */
-.back-home {
-    position: fixed;
-    bottom: 10px;
-    right: 10px;
-    background: rgba(76, 175, 80, 0.9);
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-decoration: none;
-    color: white;
-    font-size: 14px;
-}
 
 
