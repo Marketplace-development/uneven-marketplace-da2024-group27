@@ -122,7 +122,9 @@
 <body class="product-details-page">
     <div class="container">
         <h1>{{ product.name }}</h1>
-        <p>{{ product.description }}</p>
+        <p><strong>User:</strong> {{ owner.userName }}</p>
+        <p><strong>Address:</strong> {{ owner.authID }}</p>
+        <p><strong>Product Description:</strong> {{ product.description }}</p>
 
         <!-- Product afbeelding -->
         {% if product.picture %}
