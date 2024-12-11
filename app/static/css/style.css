@@ -896,6 +896,55 @@ body {
     font-weight: 500; /* Medium gewicht voor betere leesbaarheid */
     text-transform: capitalize; /* Alleen de eerste letter in hoofdletter */
 }
+
+/* Stijlen voor de hoofdkoptekst */
+.page-header {
+    font-size: 2.5rem;
+    color: #ffffff;
+    text-align: center;
+    margin: 40px 0 20px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Stijlen voor de sorteermenu */
+.sorting-menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.sorting-menu label {
+    font-size: 1rem;
+    color: #4CAF50;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.sorting-menu select {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border: 1px solid #4CAF50;
+    border-radius: 5px;
+    background-color: #ffffff;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+.sorting-menu select:hover {
+    border-color: #45a049;
+}
+
+.sorting-menu select:focus {
+    outline: none;
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
 /* Container voor de lijst met producten */
 .container {
     display: flex;
@@ -989,7 +1038,7 @@ h1 {
 
 .back-home:hover {
     background-color: rgba(56, 142, 60, 0.9); /* Iets donkerdere transparante groene kleur bij hover */
-    transform: scale(1.05); /* Vergroot subtiel
+    transform: scale(1.05);} /* Vergroot subtiel
     
 /* Responsieve stijlen voor kleinere schermen */
 @media (max-width: 768px) {
@@ -1113,11 +1162,5 @@ button[type="submit"]:hover {
     color: white;
     font-size: 14px;
 }
-
-
-
-
-
-
 
 

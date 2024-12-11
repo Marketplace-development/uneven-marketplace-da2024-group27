@@ -4,10 +4,100 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Booking Successful</title>
+    <style>
+        /* Algemene stijl voor Booking Successful */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-image: url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparante achtergrond */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #ffffff;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <h1>Booking Successful!</h1>
-    <p>You have successfully booked: {{ product_name }}</p>
-    <a href="{{ url_for('main.dashboard') }}">Return to Profile</a>
+    <div class="container">
+        <h1>Booking Successful!</h1>
+        <p>You have successfully booked: {{ product_name }}</p>
+        <a href="{{ url_for('main.dashboard') }}">Return to Profile</a>
+    </div>
+
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // Functie om confetti te lanceren
+        function launchConfetti() {
+            const duration = 3000; // Confetti duurt 3 seconden
+            const end = Date.now() + duration;
+
+            // Configuratie voor herhaald confetti-schieten
+            const frame = () => {
+                confetti({
+                    particleCount: 7,
+                    startVelocity: 30,
+                    spread: 360,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random() - 0.2 // Iets boven het midden
+                    },
+                    colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            };
+
+            frame(); // Start de confetti
+        }
+
+        // Start confetti wanneer de pagina laadt
+        window.onload = () => {
+            setTimeout(() => {
+                launchConfetti();
+            }, 0); // Direct na de pagina-laad wordt confetti gestart
+        };
+    </script>
 </body>
 </html>

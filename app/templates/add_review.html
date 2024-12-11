@@ -3,14 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <title>Add Review</title>
+    <style>
+        /* Alleen toepassen op de add-review-pagina */
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://dam.tuincentrum.nl/images/1644584557_gazon-onderhouden.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 600px;
+            margin: 50px auto;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparante achtergrond */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        /* Titel */
+        .container h1 {
+            font-size: 2rem;
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        /* Formulier stijlen */
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form label {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        form input[type="number"] {
+            width: 100%;
+            max-width: 200px;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Terug naar Dashboard knop */
+        .container a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: rgba(76, 175, 80, 0.8);
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .container a:hover {
+            background-color: rgba(56, 142, 60, 0.9);
+        }
+
+        /* Numerieke score styling */
+        .score-input {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .score-input input {
+            width: 50px;
+            text-align: center;
+            font-size: 1.5rem;
+            padding: 5px;
+            margin: 0 10px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+        }
+    </style>
 </head>
 <body>
-    <h1>Add a Review for Booking #{{ booking.BookingID }}</h1>
-    <form action="" method="POST">
-        <label for="score">Rate your experience (1-5):</label>
-        <input type="number" id="score" name="score" min="1" max="5" required placeholder="Enter a score from 1 to 5">
-        <button type="submit">Submit Review</button>
-    </form>
-    <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+    <div class="container">
+        <h1>Add a Review for Booking #{{ booking.BookingID }}</h1>
+        <form action="" method="POST">
+            <label for="score">Rate your experience (1-5):</label>
+            <!-- Numerieke score invoer -->
+            <div class="score-input">
+                <input type="number" id="score" name="score" min="1" max="5" required placeholder="Enter a score from 1 to 5">
+            </div>
+            <button type="submit">Submit Review</button>
+        </form>
+        <a href="{{ url_for('main.dashboard') }}">Back to Dashboard</a>
+    </div>
 </body>
 </html>
