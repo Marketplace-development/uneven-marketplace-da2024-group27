@@ -407,7 +407,7 @@ a {
     padding: 30px;
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-    max-width: 1200px;
+    max-width: 900px;
 }
 #dashboard-page .product-item {
     display: flex;
@@ -427,7 +427,7 @@ a {
 }
 
 #dashboard-page .product-image-container {
-    flex: 0 0 350px; /* Vergroot de breedte van de container */
+    flex: 0 0 300px; /* Vergroot de breedte van de container */
     display: flex;
     align-items: center;
     justify-content: flex-start; /* Positioneert de afbeelding meer naar links */
@@ -547,7 +547,7 @@ a {
 
 /* Loginpagina styling */
 .login-container {
-    max-width: 600px;
+    max-width: 400px;
     margin: 50px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.9);
@@ -651,7 +651,7 @@ footer {
 
 /* Registrerenpagina styling */
 .register-container {
-    max-width: 600px;
+    max-width: 400px;
     margin: 50px auto;
     padding: 20px;
     background: rgba(255, 255, 255, 0.9);
