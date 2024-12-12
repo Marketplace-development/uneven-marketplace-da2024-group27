@@ -7,23 +7,25 @@
 <body>
     <h1 class="page-header">All Products</h1>
 
-    <!-- Search Form -->
-    <form method="get" action="/listings" class="search-form">
-        <label for="search">Search Products:</label>
-        <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Search for products...">
-        <button type="submit">Search</button>
-    </form>
-
-    <!-- Sorting Menu -->
-    <form method="get" action="/listings" class="sorting-menu">
-        <label for="sort">Sort by:</label>
-        <select name="sort" id="sort" onchange="this.form.submit()">
-            <option value="name_asc" {% if sort_option == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
-            <option value="name_desc" {% if sort_option == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
-            <option value="price_asc" {% if sort_option == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
-            <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
-        </select>
-    </form>
+    <div class="search-sort-container">
+        <!-- Zoekformulier -->
+        <form method="get" action="/listings" class="search-form">
+            <label for="search"></label>
+            <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Search for products...">
+            <button type="submit">Search</button>
+        </form>
+    
+        <!-- Sorteermenu -->
+        <form method="get" action="/listings" class="sorting-menu">
+            <label for="sort">Sort by:</label>
+            <select name="sort" id="sort" onchange="this.form.submit()">
+                <option value="name_asc" {% if sort_option == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
+                <option value="name_desc" {% if sort_option == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+                <option value="price_asc" {% if sort_option == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+                <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
+            </select>
+        </form>
+    </div>
 
     <div class="container">
         {% for product in listings %}

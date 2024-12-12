@@ -906,43 +906,96 @@ body {
     text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* Stijlen voor de sorteermenu */
+/* Container voor zoekbalk en sorteermenu */
+.search-sort-container {
+    display: flex;
+    justify-content: space-between; /* Plaatst de zoekbalk en sorteermenu naast elkaar */
+    align-items: center; /* Lijnt items verticaal uit */
+    flex-wrap: wrap; /* Zorgt ervoor dat het responsief blijft */
+    gap: 20px; /* Voeg ruimte toe tussen de elementen */
+    margin: 20px auto; /* Centraal plaatsen en ruimte boven/onder */
+    padding: 10px 20px; /* Padding rond de container */
+    background-color: rgba(255, 255, 255, 0.9); /* Lichte achtergrond */
+    border-radius: 10px; /* Maak de randen licht afgerond */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Zachte schaduw */
+}
+
+/* Zoekbalk formulier */
+.search-form {
+    display: flex;
+    justify-content: flex-start; /* Lijn de items binnen de zoekbalk uit */
+    align-items: center; /* Lijnt tekst en knop verticaal uit */
+    gap: 10px; /* Voeg ruimte tussen label, input en knop */
+    flex: 1; /* Laat de zoekbalk de beschikbare ruimte benutten */
+}
+
+/* Input veld voor zoekbalk */
+.search-form input[type="text"] {
+    font-size: 1rem; /* Maak de tekstgrootte duidelijk leesbaar */
+    padding: 10px; /* Voeg ruimte toe binnenin */
+    border: 1px solid #4CAF50; /* Groene rand */
+    border-radius: 5px; /* Ronde hoeken */
+    flex: 1; /* Laat het veld aanpassen aan beschikbare ruimte */
+    max-width: 300px; /* Beperk de maximale breedte */
+    background-color: #fff; /* Witte achtergrond */
+    color: #333; /* Donkere tekstkleur */
+    transition: border-color 0.3s ease;
+}
+
+/* Zoekknop */
+.search-form button {
+    font-size: 1rem; /* Consistente tekstgrootte */
+    padding: 10px 20px; /* Zorg voor een klikbare knop */
+    background-color: #4CAF50; /* Groene knop */
+    color: white; /* Witte tekst */
+    border: none; /* Verwijder standaardranden */
+    border-radius: 5px; /* Maak de knoppen rond */
+    cursor: pointer; /* Cursor veranderen bij hover */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Zachte schaduw */
+}
+
+.search-form button:hover {
+    background-color: #45a049; /* Donkerdere groene kleur bij hover */
+    transform: scale(1.05); /* Vergrotingseffect bij hover */
+}
+
+/* Sorteermenu */
 .sorting-menu {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px 20px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    justify-content: flex-end; /* Lijn items rechts uit */
+    align-items: center; /* Lijnt label en dropdown verticaal uit */
+    gap: 10px; /* Voeg ruimte tussen label en select box */
+    flex: 1; /* Laat de dropdown zich aanpassen aan de beschikbare ruimte */
 }
 
-.sorting-menu label {
-    font-size: 1rem;
-    color: #4CAF50;
-    margin-right: 10px;
-    font-weight: bold;
-}
-
+/* Sorteermenu select */
 .sorting-menu select {
-    font-size: 1rem;
-    padding: 5px 10px;
-    border: 1px solid #4CAF50;
-    border-radius: 5px;
-    background-color: #ffffff;
-    color: #333;
+    font-size: 1rem; /* Zorg dat de tekstgrootte goed leesbaar is */
+    padding: 10px; /* Voeg padding toe binnenin de select box */
+    border: 1px solid #4CAF50; /* Groene rand */
+    border-radius: 5px; /* Maak de hoeken afgerond */
+    background-color: white; /* Witte achtergrond */
+    color: #333; /* Donkere tekstkleur */
     transition: border-color 0.3s ease;
 }
 
 .sorting-menu select:hover {
-    border-color: #45a049;
+    border-color: #45a049; /* Donkerdere randkleur bij hover */
 }
 
-.sorting-menu select:focus {
-    outline: none;
-    border-color: #4CAF50;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+/* Responsiviteit */
+@media (max-width: 768px) {
+    .search-sort-container {
+        flex-direction: column; /* Stapel items op kleine schermen */
+        align-items: flex-start; /* Lijn items links uit */
+        gap: 20px;
+    }
+
+    .search-form,
+    .sorting-menu {
+        width: 100%; /* Laat beide elementen de volledige breedte innemen */
+    }
 }
 
 /* Container voor de lijst met producten */
