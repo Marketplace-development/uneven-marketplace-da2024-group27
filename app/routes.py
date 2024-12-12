@@ -153,24 +153,40 @@ def add_product():
     return render_template('add_product.html')
 
 # View All Listings Route
+from sqlalchemy import func
+
 @main.route('/listings', methods=['GET'])
 def listings():
-    sort_option = request.args.get('sort', 'name_asc')  # Standaard op naam sorteren (A-Z)
+    # Verkrijg zoekterm en sorteermogelijkheid van de URL-parameters
+    search_query = request.args.get('search', '').strip()  # De zoekterm, standaard leeg
+    sort_option = request.args.get('sort', 'name_asc')  # De sorteeroptie, standaard op naam sorteren (A-Z)
+    
+    # Begin de basisquery voor producten
+    query = Product.query
 
-    # Bouw de query op basis van de sorteeroptie
+    # Als er een zoekterm is, filter dan op naam of beschrijving
+    if search_query:
+        query = query.filter(
+            (Product.name.ilike(f'%{search_query}%')) |  # Zoeken in de naam van het product
+            (Product.description.ilike(f'%{search_query}%'))  # Zoeken in de beschrijving van het product
+        )
+
+    # Sorteren op basis van de geselecteerde optie
     if sort_option == 'name_asc':
-        all_products = Product.query.order_by(Product.name.asc()).all()
+        query = query.order_by(Product.name.asc())
     elif sort_option == 'name_desc':
-        all_products = Product.query.order_by(Product.name.desc()).all()
+        query = query.order_by(Product.name.desc())
     elif sort_option == 'price_asc':
-        all_products = Product.query.order_by(Product.price.asc()).all()
+        query = query.order_by(Product.price.asc())
     elif sort_option == 'price_desc':
-        all_products = Product.query.order_by(Product.price.desc()).all()
-    else:
-        all_products = Product.query.all()  # Default optie, haal alle producten op
+        query = query.order_by(Product.price.desc())
 
-    # Render de template en geef de sorteeroptie door aan de template
-    return render_template('listings.html', listings=all_products, sort_option=sort_option)
+    # Haal de producten op na filteren en sorteren
+    all_products = query.all()
+
+    # Render de template met de gefilterde producten en de zoekterm
+    return render_template('listings.html', listings=all_products, sort_option=sort_option, search_query=search_query)
+
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):

@@ -6,7 +6,14 @@
 </head>
 <body>
     <h1 class="page-header">All Products</h1>
-    
+
+    <!-- Search Form -->
+    <form method="get" action="/listings" class="search-form">
+        <label for="search">Search Products:</label>
+        <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Search for products...">
+        <button type="submit">Search</button>
+    </form>
+
     <!-- Sorting Menu -->
     <form method="get" action="/listings" class="sorting-menu">
         <label for="sort">Sort by:</label>
@@ -33,5 +40,7 @@
     <a href="/dashboard" class="back-home">Back To Profile</a>
 </body>
 </html>
+
+
 
 
