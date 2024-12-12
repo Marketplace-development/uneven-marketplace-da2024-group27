@@ -236,6 +236,7 @@ def booking_success():
 # Product Details Route
 
 @main.route('/product-details/<int:listingID>')
+@main.route('/product-details/<int:listingID>')
 def product_details(listingID):
     # Haal het product op, of retourneer 404 als het niet bestaat
     product = Product.query.get_or_404(listingID)
@@ -259,15 +260,18 @@ def product_details(listingID):
         .scalar()
     )
 
+    # Haal de eigenaar van het product op via providerID
+    owner = User.query.get_or_404(product.providerID)
+
     # Render de 'product_details.html' template met de relevante gegevens
     return render_template(
         'product_details.html',
         product=product,
         bookings=bookings,
         reviews=reviews,
-        average_score=round(average_score, 2) if average_score else None
+        average_score=round(average_score, 2) if average_score else None,
+        owner=owner  # Voeg de eigenaar toe aan de template
     )
-
 # Edit Product Route
 @main.route('/edit-product/<int:listingID>', methods=['GET', 'POST'])
 def edit_product(listingID):
@@ -444,4 +448,3 @@ def delete_booking(BookingID):
 
     return redirect(url_for('main.bookings'))
 
-#blablabla
