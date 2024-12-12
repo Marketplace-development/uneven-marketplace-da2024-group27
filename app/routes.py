@@ -153,19 +153,8 @@ def add_product():
 # View All Listings Route
 @main.route('/listings')
 def listings():
-    # Haal de sorteeroptie uit de queryparameters (default: 'name_asc')
-    sort_option = request.args.get('sort', 'name_asc')
-
-    # Sorteer op basis van de naam
-    if sort_option == 'name_asc':
-        all_products = Product.query.order_by(Product.name.asc()).all()  # Sort by name A-Z
-    elif sort_option == 'name_desc':
-        all_products = Product.query.order_by(Product.name.desc()).all()  # Sort by name Z-A
-    else:
-        # Fallback to name_asc if sort_option is invalid
-        all_products = Product.query.order_by(Product.name.asc()).all()
-
-    return render_template('listings.html', listings=all_products, sort_option=sort_option)
+    all_products = Product.query.all()
+    return render_template('listings.html', listings=all_products)
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
@@ -270,17 +259,13 @@ def product_details(listingID):
         .scalar()
     )
 
-    # Haal de eigenaar van het product op via providerID
-    owner = User.query.get_or_404(product.providerID)
-
     # Render de 'product_details.html' template met de relevante gegevens
     return render_template(
         'product_details.html',
         product=product,
         bookings=bookings,
         reviews=reviews,
-        average_score=round(average_score, 2) if average_score else None,
-        owner=owner  # Voeg de eigenaar toe aan de template
+        average_score=round(average_score, 2) if average_score else None
     )
 
 # Edit Product Route
@@ -458,3 +443,5 @@ def delete_booking(BookingID):
         flash(f'An error occurred: {e}', 'danger')
 
     return redirect(url_for('main.bookings'))
+
+#blablabla

@@ -4,12 +4,12 @@ from datetime import datetime
 UPLOAD_FOLDER = os.path.join(os.getcwd(), 'generated_files')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-def generate_timeslots(start_time, end_time, slot_duration):
+def generate_timeslots(start_time, end_time):
     current_time = start_time
     slots = []
     while current_time < end_time:
         slot_start = current_time
-        slot_end = current_time + slot_duration
+        slot_end = current_time 
         slots.append((slot_start, slot_end))
         current_time = slot_end
     return slots
