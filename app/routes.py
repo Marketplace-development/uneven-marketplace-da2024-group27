@@ -103,6 +103,7 @@ def add_product():
         description = request.form['description']
         picture = request.form['picture']
         status = request.form['status']
+        price = request.form['price']  # Haal de prijs per dag op
         start_time = request.form['start_time']
         end_time = request.form['end_time']
         available_calendar = [start_time, end_time]
@@ -139,6 +140,7 @@ def add_product():
             description=description,
             picture=picture,
             status=status,
+            price=price,  # Voeg de prijs per dag toe
             available_calendar=available_calendar,
             providerID=session['user_id']
         )
@@ -151,10 +153,24 @@ def add_product():
     return render_template('add_product.html')
 
 # View All Listings Route
-@main.route('/listings')
+@main.route('/listings', methods=['GET'])
 def listings():
-    all_products = Product.query.all()
-    return render_template('listings.html', listings=all_products)
+    sort_option = request.args.get('sort', 'name_asc')  # Standaard op naam sorteren (A-Z)
+
+    # Bouw de query op basis van de sorteeroptie
+    if sort_option == 'name_asc':
+        all_products = Product.query.order_by(Product.name.asc()).all()
+    elif sort_option == 'name_desc':
+        all_products = Product.query.order_by(Product.name.desc()).all()
+    elif sort_option == 'price_asc':
+        all_products = Product.query.order_by(Product.price.asc()).all()
+    elif sort_option == 'price_desc':
+        all_products = Product.query.order_by(Product.price.desc()).all()
+    else:
+        all_products = Product.query.all()  # Default optie, haal alle producten op
+
+    # Render de template en geef de sorteeroptie door aan de template
+    return render_template('listings.html', listings=all_products, sort_option=sort_option)
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
@@ -236,7 +252,6 @@ def booking_success():
 # Product Details Route
 
 @main.route('/product-details/<int:listingID>')
-@main.route('/product-details/<int:listingID>')
 def product_details(listingID):
     # Haal het product op, of retourneer 404 als het niet bestaat
     product = Product.query.get_or_404(listingID)
@@ -279,6 +294,7 @@ def edit_product(listingID):
         flash('You need to log in to edit a product', 'warning')
         return redirect(url_for('main.login'))
     
+    # Zoek het product van de gebruiker
     product = Product.query.filter_by(listingID=listingID, providerID=session['user_id']).first()
     if not product:
         flash('Product not found or you do not have permission to edit this product.', 'danger')
@@ -291,6 +307,13 @@ def edit_product(listingID):
         product.picture = request.form['picture']
         product.status = request.form['status']
         product.available_calendar = request.form['available_calendar']
+
+        # **Prijs update**: Haal de prijs op uit het formulier
+        try:
+            product.price = float(request.form['price'])  # Zet de prijs om naar een float
+        except ValueError:
+            flash('Invalid price format. Please enter a valid number.', 'danger')
+            return redirect(url_for('main.edit_product', listingID=listingID))
 
         # Kalenderinformatie ophalen en valideren
         try:
@@ -320,7 +343,7 @@ def edit_product(listingID):
 
         # Opslaan in de database
         db.session.commit()
-        flash('Product updated successfully, including calendar!', 'success')
+        flash('Product updated successfully, including calendar and price!', 'success')
         return redirect(url_for('main.dashboard'))
     
     # Render de bewerkingspagina

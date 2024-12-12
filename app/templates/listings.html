@@ -13,6 +13,8 @@
         <select name="sort" id="sort" onchange="this.form.submit()">
             <option value="name_asc" {% if sort_option == 'name_asc' %}selected{% endif %}>Name (A-Z)</option>
             <option value="name_desc" {% if sort_option == 'name_desc' %}selected{% endif %}>Name (Z-A)</option>
+            <option value="price_asc" {% if sort_option == 'price_asc' %}selected{% endif %}>Price (Low to High)</option>
+            <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
         </select>
     </form>
 
@@ -23,6 +25,7 @@
             <h3>{{ product.name }}</h3>
             <p>{{ product.description }}</p>
             <p><strong>Status:</strong> {{ product.status }}</p>
+            <p><strong>Price per day:</strong> €{{ product.price }}</p> <!-- Weergeeft de prijs per dag -->
             <a href="/product-details/{{ product.listingID }}" class="btn">More Details</a>
         </div>
         {% endfor %}
@@ -30,3 +33,5 @@
     <a href="/dashboard" class="back-home">Back To Profile</a>
 </body>
 </html>
+
+

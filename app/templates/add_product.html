@@ -3,8 +3,6 @@
 <head>
     <title>Add New Product</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
-
 </head>
 <body class="add-product-container">
     <h1 class="page-header">Add a New Product</h1>
@@ -23,6 +21,10 @@
             <option value="Available">Available</option>
             <option value="Unavailable">Unavailable</option>
         </select><br><br>
+
+        <!-- Nieuwe velden voor prijs -->
+        <label for="price">Price per day (€):</label><br>
+        <input type="number" id="price" name="price" step="0.01" required><br><br>
 
         <!-- Nieuwe velden voor tijdslots -->
         <h2>Generate Calendar Slots</h2>

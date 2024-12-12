@@ -26,6 +26,7 @@ class Product(db.Model):
     description = db.Column(db.Text, nullable=False)
     picture = db.Column(db.String(200), nullable=True)
     status = db.Column(db.String(50), nullable=False)
+    price= db.Column(db.Float, nullable= False)
 
     # Foreign Key
     providerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)

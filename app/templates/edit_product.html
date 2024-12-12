@@ -179,6 +179,10 @@
             <option value="Inactive" {% if product.status == "Inactive" %}selected{% endif %}>Inactive</option>
         </select>
 
+        <!-- Prijs invoeren -->
+        <label for="price">Price (in EUR):</label>
+        <input type="number" id="price" name="price" value="{{ product.price }}" step="0.01" min="0" required>
+
         <!-- Subtitel voor de kalendersectie -->
         <h2>Edit Calendar Slots</h2>
 
