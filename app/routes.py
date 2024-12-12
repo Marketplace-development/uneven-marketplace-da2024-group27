@@ -211,7 +211,6 @@ def book_product(listingID):
             # Haal gegevens uit het formulier op
             start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
             end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-            commission_fee = float(request.form['commission_fee'])
 
             # Controleer of de geselecteerde periode binnen de beschikbare periode valt
             available_start = datetime.strptime(available_calendar[0][1:], '%Y-%m-%dT%H:%M')
@@ -226,7 +225,6 @@ def book_product(listingID):
                 listingID=listingID,
                 buyerID=session['user_id'],
                 time=start_time,
-                commissionfee=commission_fee,
                 booked_calendar=booked_calendar
             )
             db.session.add(new_booking)
