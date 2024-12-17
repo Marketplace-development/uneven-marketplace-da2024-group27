@@ -27,27 +27,27 @@ class Product(db.Model):
     picture = db.Column(db.String(200), nullable=True)
     status = db.Column(db.String(50), nullable=False)
     price= db.Column(db.Float, nullable= False)
-
+    timeslot= db.Column(db.String(200), nullable= True)
     # Foreign Key
     providerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
 
     # Additional Field
-    available_calendar = db.Column(db.Text, nullable=False)
+    available_calendar = db.Column(db.Text, nullable=True)
 
 
 class Booking(db.Model):
     __tablename__ = 'Booking'  # Adjusted to match the image
     BookingID = db.Column(db.Integer, primary_key=True)
     personsBooked = db.Column(db.Integer, nullable=True)
-    time = db.Column(db.DateTime, nullable=False)
-    commissionfee = db.Column(db.Float, nullable=False)
+    time = db.Column(db.DateTime, nullable=True)
+    commissionfee = db.Column(db.Float, nullable=True)
 
     # Foreign Keys
     listingID = db.Column(db.Integer, db.ForeignKey('Product.listingID'), nullable=False)
     buyerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
 
     # Additional Field
-    booked_calendar = db.Column(db.Text, nullable=False)
+    booked_calendar = db.Column(db.Text, nullable=True)
     product = db.relationship('Product', backref='bookings')
 
 

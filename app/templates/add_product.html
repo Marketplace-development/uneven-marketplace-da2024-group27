@@ -21,6 +21,7 @@
             <option value="Available">Available</option>
             <option value="Unavailable">Unavailable</option>
         </select><br><br>
+        <p><em>Note: if the status is unavailable your product won't be able to be booked.</em></p>
 
         <!-- Nieuwe velden voor prijs -->
         <label for="price">Price per day (€):</label><br>
@@ -28,20 +29,11 @@
 
         <p><em>Note: This price includes our standard 20% commission.</em></p>
 
-        <!-- Nieuwe velden voor tijdslots -->
-        <h2>Generate Calendar Slots</h2>
-        <label for="start_time">Start Time:</label><br>
-        <input type="datetime-local" id="start_time" name="start_time" required><br><br>
-
-        <label for="end_time">End Time:</label><br>
-        <input type="datetime-local" id="end_time" name="end_time" required><br><br>
-
-        <label for="slot_duration">Maximum Slot Duration (days):</label><br>
-        <input type="number" id="slot_duration" name="slot_duration" value="5" readonly><br><br>
-
-        <!-- Bestaand veld voor beschikbare kalender -->
-        <label for="available_calendar">Available Calendar:</label><br>
-        <input type="text" id="available_calendar" name="available_calendar" placeholder="Optional notes"><br><br>
+        <!-- Extra veld voor manueel tijdslot invoeren -->
+        <h2>Timeslot</h2>
+        <label for="timeslot">Timeslot (dd-mm-jj startuur - einduur):</label><br>
+        <input type="text" id="timeslot" name="timeslot" 
+               placeholder="dd-mm-jj --:-- - --:--" required><br><br>
 
         <!-- Submit knop -->
         <button type="submit">Add Product</button>
@@ -50,3 +42,5 @@
     <a href="{{ url_for('main.dashboard') }}">Back To Profile</a>
 </body>
 </html>
+
+

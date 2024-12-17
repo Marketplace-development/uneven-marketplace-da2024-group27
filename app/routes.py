@@ -90,7 +90,6 @@ def logout():
     flash('You have been logged out.', 'success')
     return redirect(url_for('main.home'))
 
-# Add Product Route
 @main.route('/add-product', methods=['GET', 'POST'])
 def add_product():
     if 'user_id' not in session:
@@ -104,44 +103,17 @@ def add_product():
         picture = request.form['picture']
         status = request.form['status']
         price = request.form['price']  # Haal de prijs per dag op
-        start_time = request.form['start_time']
-        end_time = request.form['end_time']
-        available_calendar = [start_time, end_time]
+        # Nieuwe waarde voor timeslot toevoegen
+        timeslot = request.form['timeslot']  # Haal het handmatig ingevoerde tijdslot op
 
-        # Validatie van tijdgerelateerde invoer
-        try:
-            slot_duration = int(request.form['slot_duration'])  # Zorg dat het een int is
-            start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
-            end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
-        except ValueError:
-            flash('Invalid input format. Please check your time inputs.', 'danger')
-            return redirect(url_for('main.add_product'))
-
-        # Tijdslots genereren
-        timeslots = generate_timeslots(start_time, end_time, timedelta(minutes=slot_duration))
-
-        # iCalendar-bestand aanmaken
-        filename = f"{name}_timeslots.ics"
-        filepath = create_ical(timeslots, filename)
-
-        # Controleer of een geldig pad is geretourneerd
-        if filepath is None:
-            raise ValueError("create_ical did not return a valid filepath")
-
-        # Validatie van het bestandspad
-        if not isinstance(filepath, str):
-            raise TypeError(f"Expected a string for filepath, got {type(filepath)}")
-        if not os.path.exists(filepath):
-            raise FileNotFoundError(f"Filepath does not exist: {filepath}")
-
-        # Product opslaan in de database
+        # Product opslaan in de database, inclusief het handmatig ingevoerde timeslot
         new_product = Product(
             name=name,
             description=description,
             picture=picture,
             status=status,
             price=price,  # Voeg de prijs per dag toe
-            available_calendar=available_calendar,
+            timeslot=timeslot,  # Opslaan van het handmatig ingevoerde tijdslot
             providerID=session['user_id']
         )
         db.session.add(new_product)
@@ -150,7 +122,10 @@ def add_product():
         # Bestand verzenden
         flash('Successfully added a new product!', 'success')
         return redirect(url_for('main.dashboard'))
+    
     return render_template('add_product.html')
+
+
 
 # View All Listings Route
 from sqlalchemy import func
@@ -160,7 +135,7 @@ def listings():
     # Verkrijg zoekterm en sorteermogelijkheid van de URL-parameters
     search_query = request.args.get('search', '').strip()  # De zoekterm, standaard leeg
     sort_option = request.args.get('sort', 'name_asc')  # De sorteeroptie, standaard op naam sorteren (A-Z)
-    
+    status_filter = request.args.get('status', 'all')  # De statusfilter, standaard op 'all' (toon alles)
     # Begin de basisquery voor producten
     query = Product.query
 
@@ -170,6 +145,14 @@ def listings():
             (Product.name.ilike(f'%{search_query}%')) |  # Zoeken in de naam van het product
             (Product.description.ilike(f'%{search_query}%'))  # Zoeken in de beschrijving van het product
         )
+    if status_filter != 'all':
+        # Filteren op basis van de geselecteerde status
+        query = query.filter(Product.status == status_filter)
+    # Als de statusfilter 'all' is, geen extra filter toepassen
+    else:
+        # Je hoeft geen filter toe te passen als 'all' is geselecteerd
+        # De query zal gewoon alle producten tonen, zonder statusbeperkingen
+        pass
 
     # Sorteren op basis van de geselecteerde optie
     if sort_option == 'name_asc':
@@ -185,78 +168,39 @@ def listings():
     all_products = query.all()
 
     # Render de template met de gefilterde producten en de zoekterm
-    return render_template('listings.html', listings=all_products, sort_option=sort_option, search_query=search_query)
+    return render_template('listings.html', listings=all_products, sort_option=sort_option, search_query=search_query, status_filter=status_filter)
 
 
 @main.route('/book-product/<int:listingID>', methods=['GET', 'POST'])
 def book_product(listingID):
-    # Controleer of de gebruiker is ingelogd
-    if 'user_id' not in session:
-        flash('You need to log in to book a product', 'warning')
-        return redirect(url_for('main.login'))
-
     # Haal het product op
     product = Product.query.get_or_404(listingID)
 
-    # Parse de beschikbare kalender (start en einddatum)
-    available_calendar = []
-    if product.available_calendar:
-        available_calendar = product.available_calendar.split(",")  # Splits op basis van komma
-    
-    if request.method == 'POST':
-        try:
-            # Debug-informatie
-            print("Form data received:", request.form)
+    # Controleer of het product beschikbaar is
+    if product.status.lower() == 'unavailable':
+        flash('This product is already unavailable.', 'warning')
+        return redirect(url_for('main.product_details', listingID=listingID))
 
-            # Haal gegevens uit het formulier op
-            start_time = datetime.strptime(request.form['start_time'], '%Y-%m-%dT%H:%M')
-            end_time = datetime.strptime(request.form['end_time'], '%Y-%m-%dT%H:%M')
+    # Controleer of de gebruiker is ingelogd
+    if 'user_id' not in session:
+        flash('You need to log in to book a product.', 'warning')
+        return redirect(url_for('auth.login'))  
 
-            # Controleer of de geselecteerde periode binnen de beschikbare periode valt
-            available_start = datetime.strptime(available_calendar[0][1:], '%Y-%m-%dT%H:%M')
-            available_end = datetime.strptime(available_calendar[1][:-1], '%Y-%m-%dT%H:%M')
-            if not (available_start <= start_time < end_time <= available_end):
-                flash("Selected time is not within the available period.", "danger")
-                return redirect(url_for('main.book_product', listingID=listingID))
-
-            # Voeg nieuwe booking toe
-            booked_calendar = f"{start_time.strftime('%Y-%m-%d %H:%M')} - {end_time.strftime('%Y-%m-%d %H:%M')}"
-            new_booking = Booking(
-                listingID=listingID,
-                buyerID=session['user_id'],
-                time=start_time,
-                booked_calendar=booked_calendar
-            )
-            db.session.add(new_booking)
-
-            db.session.commit()
-            
-            # Voeg notificatie toe
-            new_notification = Notification(
-                type=f"Booking confirmed for {product.name} from {start_time} to {end_time}.",
-                viewed=False,  # Zorg ervoor dat de notificatie standaard niet als gelezen wordt gemarkeerd
-                receiverID=session['user_id']
-            )
-            db.session.add(new_notification)
-
-            # Debugging de redirect
-            print("Redirecting to booking success page...")
-            return redirect(url_for('main.booking_success', product_name=product.name))
-
-        except ValueError as e:
-            print(f"Validation error: {e}")
-            flash(f"Invalid input: {str(e)}", 'danger')
-            return redirect(url_for('main.book_product', listingID=listingID))
-        except Exception as e:
-            print(f"Unexpected error: {e}")
-            flash("An unexpected error occurred while processing your booking.", "danger")
-            return redirect(url_for('main.book_product', listingID=listingID))
-
-    return render_template(
-        'book_product.html',
-        product=product,
-        available_calendar=available_calendar
+    # Maak een nieuwe booking aan en update de productstatus
+    new_booking = Booking(
+        listingID=listingID,
+        buyerID=session['user_id']
     )
+    product.status = 'Unavailable'
+
+    # Sla alles op in de database
+    db.session.add(new_booking)
+    db.session.commit()
+
+    # Redirect naar succespagina
+    session['product_name'] = product.name  # Sla tijdelijk op in session
+    return redirect(url_for('main.booking_success'))
+
 
 @main.route('/booking-success')
 def booking_success():
@@ -292,6 +236,7 @@ def product_details(listingID):
     # Haal de eigenaar van het product op via providerID
     owner = User.query.get_or_404(product.providerID)
 
+    timeslot = product.timeslot
     # Render de 'product_details.html' template met de relevante gegevens
     return render_template(
         'product_details.html',
@@ -299,8 +244,10 @@ def product_details(listingID):
         bookings=bookings,
         reviews=reviews,
         average_score=round(average_score, 2) if average_score else None,
-        owner=owner  # Voeg de eigenaar toe aan de template
+        owner=owner,  # Voeg de eigenaar toe aan de template
+        timeslot=timeslot  # Voeg de timeslot toe aan de template
     )
+
 # Edit Product Route
 @main.route('/edit-product/<int:listingID>', methods=['GET', 'POST'])
 def edit_product(listingID):
@@ -315,12 +262,11 @@ def edit_product(listingID):
         return redirect(url_for('main.dashboard'))
 
     if request.method == 'POST':
-        # Update de basisgegevens van het product
+       # Update de basisgegevens van het product
         product.name = request.form['listing_name']
         product.description = request.form['description']
         product.picture = request.form['picture']
         product.status = request.form['status']
-        product.available_calendar = request.form['available_calendar']
 
         # **Prijs update**: Haal de prijs op uit het formulier
         try:
@@ -329,39 +275,15 @@ def edit_product(listingID):
             flash('Invalid price format. Please enter a valid number.', 'danger')
             return redirect(url_for('main.edit_product', listingID=listingID))
 
-        # Kalenderinformatie ophalen en valideren
-        try:
-            start_time = request.form['start_time']
-            end_time = request.form['end_time']
-            slot_duration = int(request.form['slot_duration'])
-
-            # Valideer tijd
-            start_time_dt = datetime.strptime(start_time, '%Y-%m-%dT%H:%M')
-            end_time_dt = datetime.strptime(end_time, '%Y-%m-%dT%H:%M')
-            if start_time_dt >= end_time_dt:
-                flash('Start time must be before end time.', 'danger')
-                return redirect(url_for('main.edit_product', listingID=listingID))
-
-            # Genereer tijdslots
-            timeslots = generate_timeslots(start_time_dt, end_time_dt, timedelta(minutes=slot_duration))
-
-            # Optioneel: Maak een iCalendar-bestand
-            filename = f"{product.name}_timeslots.ics"
-            create_ical(timeslots, filename)
-
-            # Sla nieuwe kalenderinformatie op
-            product.available_calendar = [start_time, end_time]
-        except ValueError:
-            flash('Invalid input format. Please check your time inputs.', 'danger')
-            return redirect(url_for('main.edit_product', listingID=listingID))
 
         # Opslaan in de database
         db.session.commit()
-        flash('Product updated successfully, including calendar and price!', 'success')
+        flash('Product updated successfully, including calendar, price, and timeslot!', 'success')
         return redirect(url_for('main.dashboard'))
     
     # Render de bewerkingspagina
     return render_template('edit_product.html', product=product)
+
 
 @main.route('/delete-product/<int:listingID>', methods=['POST'])
 def delete_product(listingID):
@@ -454,7 +376,6 @@ def bookings():
     booked_by_others = db.session.query(Booking, Product, User).join(Product, Product.listingID == Booking.listingID).join(User, User.userID == Booking.buyerID).filter(Product.providerID == user_id).all()
 
     return render_template('bookings.html', my_bookings=my_bookings, booked_by_others=booked_by_others)
-
 @main.route('/booking/<int:BookingID>/delete', methods=['POST'])
 def delete_booking(BookingID):
     if 'user_id' not in session:
@@ -472,16 +393,25 @@ def delete_booking(BookingID):
         return redirect(url_for('main.bookings'))
 
     try:
+        # Haal het product op gekoppeld aan de boeking
+        product = Product.query.get(booking.listingID)
+
         # Verwijder eerst gerelateerde reviews
         Review.query.filter_by(BookingID=BookingID).delete()
 
         # Verwijder de boeking
         db.session.delete(booking)
+
+        # Update de productstatus naar 'unavailable' als het product bestaat
+        if product:
+            product.status = 'Available'
+
+        # Sla alles op in de database
         db.session.commit()
-        flash('Booking successfully deleted.', 'success')
+
+        flash('Booking successfully deleted, and product status updated to unavailable.', 'success')
     except Exception as e:
         db.session.rollback()
         flash(f'An error occurred: {e}', 'danger')
 
     return redirect(url_for('main.bookings'))
-

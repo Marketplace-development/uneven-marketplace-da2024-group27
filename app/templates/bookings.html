@@ -149,7 +149,7 @@
             {% for booking, product in my_bookings %}
             <li>
                 <p>You have booked: <strong>{{ product.name }}</strong></p>
-                <p>From: {{ booking.booked_calendar.split(' - ')[0] }} - To: {{ booking.booked_calendar.split(' - ')[1] }}</p>
+                <p>Timeslot you booked the product for: {{ product.timeslot}}</p>
                 
                 <!-- Delete Booking Button -->
                 <form action="{{ url_for('main.delete_booking', BookingID=booking.BookingID) }}" method="POST" style="display:inline;">
@@ -177,8 +177,10 @@
             {% for booking, product, user in booked_by_others %}
             <li>
                 <p>{{ user.userName }} has booked <strong>{{ product.name }}</strong></p>
-                <p>From: {{ booking.booked_calendar.split(' - ')[0] }} - To: {{ booking.booked_calendar.split(' - ')[1] }}</p>
+                <p>Timeslot for which the product is booked: {{product.timeslot}}</p>
             </li>
+            {% else %}
+            <li>You have no bookings yet.</li>
             {% endfor %}
         </ul>
     </div>

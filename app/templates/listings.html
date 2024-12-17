@@ -25,6 +25,18 @@
                 <option value="price_desc" {% if sort_option == 'price_desc' %}selected{% endif %}>Price (High to Low)</option>
             </select>
         </form>
+        <form method="get" action="{{ url_for('main.listings') }}">
+            <!-- Statusfilter dropdown -->
+            <select id="statusFilter" name="status" onchange="this.form.submit()">
+                <!-- Show everything (geen statusfilter) -->
+                <option value="all" {% if status_filter == 'all' %}selected{% endif %}>Show everything</option>
+                <!-- Only Available -->
+                <option value="Available" {% if status_filter == 'Available' %}selected{% endif %}>Only Available</option>
+                <!-- Only Unavailable -->
+                <option value="Unavailable" {% if status_filter == 'Unavailable' %}selected{% endif %}>Only Unavailable</option>
+            </select>
+        </form>
+        
     </div>
 
     <div class="container">

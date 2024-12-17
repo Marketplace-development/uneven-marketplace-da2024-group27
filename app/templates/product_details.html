@@ -124,7 +124,7 @@
             background-color: #f9fdf9; /* Lichtgroene achtergrond */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Lichte schaduw voor een zwevend effect */
         }
-        
+
     </style>
 </head>
 <body class="product-details-page">
@@ -145,22 +145,26 @@
         <h2>Price per day</h2>
         <p>{{ product.price }} €</p> <!-- Hier wordt de prijs weergegeven -->
 
-        <h2>Available Period</h2>
+        <!-- Toevoegen van de Timeslot informatie -->
+        <h2>Timeslot</h2>
         <p>
-            {% set dates = product.available_calendar[1:-1].split(",") if product.available_calendar %}
-            {% for i in range(0, dates|length, 2) %}
-                From: {{ dates[i].split("T")[0] }} {{ dates[i].split("T")[1] }}<br>
-                {% if i+1 < dates|length %}
-                    To: {{ dates[i+1].split("T")[0] }} {{ dates[i+1].split("T")[1] }}<br><br>
-                {% else %}
-                    <strong>Error:</strong> End date is missing for this period.<br><br>
-                {% endif %}
-            {% endfor %}
-            {% if not dates %}
-                <strong>No available periods for this product.</strong>
+            {% if product.timeslot %}
+                <p>{{ product.timeslot }}</p> <!-- Timeslot als string weergeven -->
+            {% else %}
+                <strong>No timeslots available for this product.</strong>
             {% endif %}
         </p>
-        
+
+        <h3>Product Status</h3>
+        <p>
+            {% if product.status == 'Available' %}
+                <p>Available</p>
+            {% else %}
+                <p>Unavailable</p>
+            {% endif %}
+        </p>
+        <p><em>Note: if the status is unavailable you are unable to be book this product.</em></p>
+
         <h2>Average Rating</h2>
         {% if average_score %}
             <p>Average Score: {{ average_score }}/5</p>
@@ -179,6 +183,13 @@
         {% else %}
             <p>No reviews yet for this product.</p>
         {% endif %}
+
+        <!-- Knoppen rechts onderaan die altijd zichtbaar blijven -->
+        <div class="button-container">
+            <a href="{{ url_for('main.listings') }}">View All Products</a>
+            <a href="{{ url_for('main.dashboard') }}">Back To Profile</a>
+        </div>
+
         
         <!-- Knoppen rechts onderaan die altijd zichtbaar blijven -->
         <div class="button-container">
@@ -187,9 +198,10 @@
         </div>
 
         <!-- Knoppen onderaan zoals origineel -->
-        <div class="bottom-buttons">
+        <div class="button-container">
             <a href="{{ url_for('main.book_product', listingID=product.listingID) }}">Book Now</a>
-        </div>
+        </div>           
     </div>
 </body>
 </html>
+

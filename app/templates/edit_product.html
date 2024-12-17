@@ -175,34 +175,29 @@
 
         <label for="status">Status:</label>
         <select id="status" name="status" required>
-            <option value="Active" {% if product.status == "Active" %}selected{% endif %}>Active</option>
-            <option value="Inactive" {% if product.status == "Inactive" %}selected{% endif %}>Inactive</option>
+            <option value="Active" {% if product.status == "Available" %}selected{% endif %}>Available</option>
+            <option value="Inactive" {% if product.status == "Unavailable" %}selected{% endif %}>Unavailable</option>
         </select>
-
+        <p><em>Note: if the status is unavailable your product won't be able to be booked.</em></p>
+        
         <!-- Prijs invoeren -->
         <label for="price">Price (€):</label>
         <input type="number" id="price" name="price" value="{{ product.price }}" step="0.01" min="0" required>
         <p><em>Note: This price includes our standard 20% commission.</em></p>
 
         <!-- Subtitel voor de kalendersectie -->
-        <h2>Edit Calendar Slots</h2>
+        <h2>Edit Timeslot</h2>
 
-        <label for="start_time">Start Time:</label>
-        <input type="datetime-local" id="start_time" name="start_time" value="{{ product.available_calendar[0] if product.available_calendar }}">
 
-        <label for="end_time">End Time:</label>
-        <input type="datetime-local" id="end_time" name="end_time" value="{{ product.available_calendar[1] if product.available_calendar }}">
-
-        <label for="slot_duration">Maximum Slot Duration (days):</label><br>
-        <input type="number" id="slot_duration" name="slot_duration" value="5" readonly><br><br>
-
-        <label for="available_calendar">Available Calendar:</label>
-        <textarea id="available_calendar" name="available_calendar">{{ product.available_calendar | join(', ') }}</textarea>
-
+        <!-- Submitknop -->
         <button type="submit">Save Changes</button>
+
     </form>
 
     <!-- Link terug naar dashboard -->
     <a href="{{ url_for('main.dashboard') }}">Back To Profile</a>
 </body>
 </html>
+
+
+ 
