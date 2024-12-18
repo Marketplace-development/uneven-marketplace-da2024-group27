@@ -129,6 +129,7 @@ def add_product():
 
 # View All Listings Route
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 
 @main.route('/listings', methods=['GET'])
 def listings():
@@ -136,7 +137,7 @@ def listings():
     search_query = request.args.get('search', '').strip()  # De zoekterm, standaard leeg
     sort_option = request.args.get('sort', 'name_asc')  # De sorteeroptie, standaard op naam sorteren (A-Z)
     status_filter = request.args.get('status', 'all')  # De statusfilter, standaard op 'all' (toon alles)
-    # Begin de basisquery voor producten
+    owner_query = request.args.get('owner', '')    # Begin de basisquery voor producten
     query = Product.query
 
     # Als er een zoekterm is, filter dan op naam of beschrijving
@@ -145,6 +146,13 @@ def listings():
             (Product.name.ilike(f'%{search_query}%')) |  # Zoeken in de naam van het product
             (Product.description.ilike(f'%{search_query}%'))  # Zoeken in de beschrijving van het product
         )
+
+    # Filter op eigenaar
+    if owner_query:
+        # Subquery om User te zoeken op basis van de userName
+        owner_subquery = User.query.filter(User.userName.ilike(f'%{owner_query}%')).subquery()
+        query = query.filter(Product.providerID == owner_subquery.c.userID)
+
     if status_filter != 'all':
         # Filteren op basis van de geselecteerde status
         query = query.filter(Product.status == status_filter)

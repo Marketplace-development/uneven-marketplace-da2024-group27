@@ -10,10 +10,17 @@
     <div class="search-sort-container">
         <!-- Zoekformulier -->
         <form method="get" action="/listings" class="search-form">
-            <label for="search"></label>
-            <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Search for products...">
+            <div>
+                <label for="search">Search Products:</label>
+                <input type="text" name="search" id="search" value="{{ search_query }}" placeholder="Search for products...">
+            </div>
+            <div>
+                <label for="owner">Search by Owner:</label>
+                <input type="text" name="owner" id="owner" value="{{ owner_query }}" placeholder="Enter owner username...">
+            </div>
             <button type="submit">Search</button>
         </form>
+        
     
         <!-- Sorteermenu -->
         <form method="get" action="/listings" class="sorting-menu">

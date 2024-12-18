@@ -28,6 +28,7 @@ class Product(db.Model):
     status = db.Column(db.String(50), nullable=False)
     price= db.Column(db.Float, nullable= False)
     timeslot= db.Column(db.String(200), nullable= True)
+    owner = db.relationship('User', backref='products')  # Relatie naar User
     # Foreign Key
     providerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
 

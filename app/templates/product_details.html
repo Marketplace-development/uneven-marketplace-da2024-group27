@@ -130,7 +130,7 @@
 <body class="product-details-page">
     <div class="container">
         <h1>{{ product.name }}</h1>
-        <p><strong>User:</strong> {{ owner.userName }}</p>
+        <p><strong>Product Owner:</strong> {{ owner.userName }}</p>
         <p><strong>Address:</strong> {{ owner.authID }}</p>
         <p><strong>Product Description:</strong> {{ product.description }}</p>
 
@@ -165,14 +165,7 @@
         </p>
         <p><em>Note: if the status is unavailable you are unable to be book this product.</em></p>
 
-        <h2>Average Rating</h2>
-        {% if average_score %}
-            <p>Average Score: {{ average_score }}/5</p>
-        {% else %}
-            <p>No ratings yet for this product.</p>
-        {% endif %}
-
-        <h4>Reviews</h4>
+        <h4>Review</h4>
         {% if reviews %}
             {% for review in reviews %}
                 <div class="review">
