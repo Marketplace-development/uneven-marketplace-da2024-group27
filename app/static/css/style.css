@@ -1113,10 +1113,45 @@ h1 {
         width: 100%;
         text-align: center;
     }
-}  
+} 
 
+.product-status {
+    color: #4CAF50; /* Groene kleur */
+    font-weight: bold; /* Vetgedrukt */
+    font-size: 1.5rem; /* Zelfde grootte als h2 */
+    border-bottom: 2px solid #4CAF50; /* Groene onderlijn */
+    padding-bottom: 5px; /* Ruimte tussen tekst en lijn */
+    margin-top: 20px; /* Extra ruimte bovenaan */
+}
 
+/* Extra dropdown container */
+.extra-menu {
+    display: flex;
+    justify-content: flex-start; /* Lijn label en dropdown uit */
+    align-items: center; /* Verticale uitlijning */
+    gap: 10px; /* Ruimte tussen label en dropdown */
+    flex: 1; /* Laat de container zich aanpassen */
+}
 
+/* Stijl voor dropdown */
+.extra-menu select {
+    font-size: 1rem; /* Consistente tekstgrootte */
+    padding: 10px; /* Zelfde padding als andere elementen */
+    border: 1px solid #4CAF50; /* Groene randkleur */
+    border-radius: 5px; /* Afgeronde hoeken */
+    background-color: white; /* Achtergrondkleur wit */
+    color: #333; /* Donkere tekstkleur */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
 
+.extra-menu select:hover {
+    border-color: #45a049; /* Donkerdere groene rand bij hover */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Zachte groene schaduw */
+}
+
+.extra-menu label {
+    font-size: 1rem; /* Consistente grootte met andere labels */
+    color: #333; /* Tekstkleur */
+}
 
 

@@ -155,7 +155,7 @@
             {% endif %}
         </p>
 
-        <h3>Product Status</h3>
+        <h2 class="product-status">Product Status</h2>
         <p>
             {% if product.status == 'Available' %}
                 <p>Available</p>
@@ -198,7 +198,7 @@
         </div>
 
         <!-- Knoppen onderaan zoals origineel -->
-        <div class="button-container">
+        <div class="bottom-buttons">
             <a href="{{ url_for('main.book_product', listingID=product.listingID) }}">Book Now</a>
         </div>           
     </div>
