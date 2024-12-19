@@ -36,16 +36,9 @@ class Product(db.Model):
 class Booking(db.Model):
     __tablename__ = 'Booking'  # Adjusted to match the image
     BookingID = db.Column(db.Integer, primary_key=True)
-    personsBooked = db.Column(db.Integer, nullable=True)
-    time = db.Column(db.DateTime, nullable=True)
-    commissionfee = db.Column(db.Float, nullable=True)
-
     # Foreign Keys
     listingID = db.Column(db.Integer, db.ForeignKey('Product.listingID'), nullable=False)
     buyerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
-
-    # Additional Field
-    booked_calendar = db.Column(db.Text, nullable=True)
     product = db.relationship('Product', backref='bookings')
 
 
