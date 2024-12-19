@@ -32,9 +32,6 @@ class Product(db.Model):
     # Foreign Key
     providerID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
 
-    # Additional Field
-    available_calendar = db.Column(db.Text, nullable=True)
-
 
 class Booking(db.Model):
     __tablename__ = 'Booking'  # Adjusted to match the image
