@@ -9,15 +9,6 @@ class User(db.Model):
     email = db.Column(db.String(100), nullable=False, unique=True)
 
 
-class Notification(db.Model):
-    __tablename__ = 'Notification'  # Adjusted to match the image
-    notificationID = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    type = db.Column(db.String(50), nullable=False)
-    viewed = db.Column(db.Boolean, default=False, nullable=False)
-
-    # Foreign Key
-    receiverID = db.Column(db.Integer, db.ForeignKey('User.userID'), nullable=False)
-
 
 class Product(db.Model):
     __tablename__ = 'Product'  # Adjusted to match the image

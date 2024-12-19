@@ -1,6 +1,6 @@
 from flask import Blueprint, request, redirect, url_for, render_template, session, flash, send_file
 from datetime import datetime, timedelta
-from .models import db, User, Product, Booking, Review, Notification
+from .models import db, User, Product, Booking, Review
 from .utils import generate_timeslots, create_ical
 from sqlalchemy.sql import func
 import os 
@@ -45,8 +45,7 @@ def dashboard():
     if 'user_id' in session:
         user = User.query.get(session['user_id'])
         products = Product.query.filter_by(providerID=user.userID).all()
-        notifications = Notification.query.filter_by(receiverID=user.userID).all()
-        return render_template('index.html', username=user.userName, listings=products, notifications=notifications)
+        return render_template('index.html', username=user.userName, listings=products)
     
     flash('You need to log in to view the dashboard.', 'warning')
     return redirect(url_for('main.login'))
